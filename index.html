@@ -27,7 +27,10 @@
     </section>
 
     <section id="results" class="results" hidden aria-live="polite">
-      <p id="summary" class="summary"></p>
+      <div class="results-head">
+        <p id="summary" class="summary"></p>
+        <button type="button" id="new-feedback" class="btn btn-ghost btn-small">New feedback</button>
+      </div>
       <div id="lists" class="lists">
         <section class="list list-ask" aria-labelledby="ask-title">
           <header class="list-head">
@@ -41,6 +44,11 @@
           <header class="list-head">
             <h2 id="ready-title">Ready to do <span id="ready-count" class="count"></span></h2>
           </header>
+          <div id="progress" class="progress">
+            <div class="progress-track"><span id="progress-fill" class="progress-fill"></span></div>
+            <p id="progress-text" class="progress-text"></p>
+          </div>
+          <p id="all-done" class="all-done" hidden>All done. Time to send it back for review.</p>
           <ul id="ready-list" class="items"></ul>
           <p id="ready-empty" class="empty" hidden>Nothing to start yet. Send the questions first.</p>
         </section>

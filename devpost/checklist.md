@@ -39,7 +39,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
   Learner check: Decode a sample, press Copy questions, and paste into any chat or notes app.
   Commit: `Copy clarifying questions as a ready message`
 
-- [ ] **4. You can tick tasks off and move wrongly placed items**
+- [x] **4. You can tick tasks off and move wrongly placed items**
   Becomes usable: Ready items can be ticked with progress and an all-done note; "Mark as clear" and "Ask about this" move items between the lists, and counts and the copied message follow; New feedback resets the page.
   Why now: Makes the tool trustworthy and useful through a whole feedback round once the main loop works.
   PRD ref: `prd.md > Ready-to-Do Checklist`, `prd.md > Fixing Mistakes`, `prd.md > Starting Over`

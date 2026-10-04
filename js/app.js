@@ -46,9 +46,21 @@
     return node;
   }
 
+  function actionButton(label, action, item) {
+    var button = el("button", "link-btn", label);
+    button.type = "button";
+    button.setAttribute("data-action", action);
+    button.setAttribute("data-id", item.id);
+    return button;
+  }
+
   function renderAskItem(item) {
     var li = el("li", "item ask-item");
-    li.appendChild(el("span", "kind-label", item.category));
+    li.setAttribute("data-id", item.id);
+    var top = el("div", "item-top");
+    top.appendChild(el("span", "kind-label", item.category));
+    top.appendChild(actionButton("Mark as clear", "to-ready", item));
+    li.appendChild(top);
     var quote = el("p", "quote");
     quote.appendChild(highlighted(item.text, item.matches));
     li.appendChild(quote);
@@ -60,10 +72,31 @@
   }
 
   function renderReadyItem(item) {
-    var li = el("li", "item ready-item");
-    li.appendChild(el("span", "tag", item.tag));
-    li.appendChild(el("span", "task-text", item.text));
+    var li = el("li", "item ready-item" + (item.done ? " is-done" : ""));
+    li.setAttribute("data-id", item.id);
+    var label = el("label", "task");
+    var box = document.createElement("input");
+    box.type = "checkbox";
+    box.checked = item.done;
+    box.setAttribute("data-action", "toggle");
+    box.setAttribute("data-id", item.id);
+    label.appendChild(box);
+    label.appendChild(el("span", "task-text", item.text));
+    li.appendChild(label);
+    var meta = el("div", "item-meta");
+    meta.appendChild(el("span", "tag", item.tag));
+    meta.appendChild(actionButton("Ask about this", "to-ask", item));
+    li.appendChild(meta);
     return li;
+  }
+
+  function renderProgress(ready) {
+    var done = ready.filter(function (i) { return i.done; }).length;
+    var total = ready.length;
+    $("progress").hidden = total === 0;
+    $("progress-text").textContent = done + " of " + total + " done";
+    $("progress-fill").style.width = total ? Math.round((done / total) * 100) + "%" : "0%";
+    $("all-done").hidden = !(total > 0 && done === total);
   }
 
   function render() {
@@ -90,6 +123,44 @@
     $("ask-empty").hidden = ask.length > 0;
     $("copy-questions").disabled = ask.length === 0;
     $("ready-empty").hidden = ready.length > 0;
+    renderProgress(ready);
+  }
+
+  function findItem(id) {
+    return state.items.filter(function (i) { return String(i.id) === String(id); })[0];
+  }
+
+  // Ticking and moving use one listener on the lists, so redrawing never loses handlers.
+  function handleListAction(event) {
+    var target = event.target.closest("[data-action]");
+    if (!target) return;
+    var item = findItem(target.getAttribute("data-id"));
+    if (!item) return;
+    var action = target.getAttribute("data-action");
+    if (action === "toggle") {
+      item.done = target.checked;
+    } else if (action === "to-ready") {
+      item.kind = "ready";
+      item.done = false;
+    } else if (action === "to-ask") {
+      item.kind = "ask";
+      if (!item.question) {
+        item.category = Phrases.GENERIC.label;
+        item.question = Phrases.GENERIC[item.lang];
+      }
+    }
+    render();
+    var again = lists.querySelector('[data-id="' + item.id + '"][data-action]');
+    if (again) again.focus();
+  }
+
+  function startOver() {
+    state.items = [];
+    feedback.value = "";
+    results.hidden = true;
+    syncDecodeButton();
+    feedback.focus();
+    window.scrollTo(0, 0);
   }
 
   var toastTimer = null;
@@ -154,5 +225,7 @@
   feedback.addEventListener("input", syncDecodeButton);
   decodeBtn.addEventListener("click", runDecode);
   $("copy-questions").addEventListener("click", copyQuestions);
+  $("new-feedback").addEventListener("click", startOver);
+  lists.addEventListener("click", handleListAction);
   syncDecodeButton();
 })();

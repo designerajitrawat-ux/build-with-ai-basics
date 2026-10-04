@@ -226,6 +226,13 @@
     hi: { open: "Hi! Feedback ke liye thanks. Bas kuch chhote sawaal, taaki main bilkul sahi bana sakoon:", close: "Thanks!" }
   };
 
+  // Question used when the designer moves a point to "Ask the client" themselves.
+  var GENERIC = {
+    label: "Your pick",
+    en: "Could you tell me more about what you'd like here? An example would help.",
+    hi: "Yahan aap exactly kya chahte ho, thoda detail mein bata sakte ho? Koi example ho to aur accha."
+  };
+
   var SAMPLES = {
     en: [
       "Hi! Saw the new homepage, overall nice work 👍",
@@ -265,6 +272,7 @@
     HINGLISH_MARKERS: HINGLISH_MARKERS,
     TAGS: TAGS,
     MESSAGE: MESSAGE,
+    GENERIC: GENERIC,
     SAMPLES: SAMPLES
   };
 
