@@ -9,7 +9,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 
 ## Slices
 
-- [ ] **1. You can paste feedback, press Decode, and see it split into points**
+- [x] **1. You can paste feedback, press Decode, and see it split into points**
   Becomes usable: A page that opens in the browser, takes pasted feedback (or a sample), and on Decode shows every request as its own point, with WhatsApp clutter and greetings removed.
   Why now: Proves the whole path from text box to screen on the first step, including project setup, so every later step has a place to land.
   PRD ref: `prd.md > The Core Journey` (steps 1-4), `prd.md > Feedback Input`, `prd.md > Splitting Feedback into Points`
