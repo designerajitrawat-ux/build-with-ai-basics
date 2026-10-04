@@ -73,7 +73,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 - [x] Separate screens and pop-ups (learner, after reviewing the live copy): a paste screen and a round screen with three steps (Ask the client, Do the work, Report back), tabs for the two lists on phones, and a Send questions sheet with Copy and Open in WhatsApp. Built and checked in a headless browser on laptop and phone sizes; the learner reviewed it and confirmed ("perfect, this is what I wanted").
 - [x] Report back to the client (learner): client, project and your name; Done, In progress and Waiting on your answer with totals; a PDF with a review box per finished change (through the print dialog) and the same report as a WhatsApp message. Built, with decoder tests and browser checks; the learner reviewed it and confirmed ("perfect, this is what I wanted").
 - [x] WhatsApp screenshots as input (learner): Add screenshots, paste or drop an image, and a Screenshot sample; read on the device with Tesseract.js, which loads only when used; text goes into the box for checking; the client's name comes from the chat header. Tested on light and dark test screenshots; the learner reviewed it and confirmed. A check with a real client chat on the live link is still to do.
-- [ ] Final review complete: feedback resolved and learner confirms ready to ship
+- [x] Final review complete: feedback resolved and learner confirms ready to ship ("ready to ship", after the live link went up)
 
 ## Code Tour and App Map
 
