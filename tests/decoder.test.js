@@ -115,3 +115,18 @@ test("sample results: English 5 ask and 6 ready, Hinglish 4 ask and 4 ready", ()
   assert.deepEqual([count(en, "ask"), count(en, "ready")], [5, 6]);
   assert.deepEqual([count(hi, "ask"), count(hi, "ready")], [4, 4]);
 });
+
+test("builds an English message with greeting, numbered questions and thanks", () => {
+  const ask = D.decode(P.SAMPLES.en).filter((i) => i.kind === "ask");
+  const message = D.buildMessage(ask);
+  const lines = message.split("\n");
+  assert.equal(lines[0], P.MESSAGE.en.open);
+  ask.forEach((item, index) => assert.ok(lines.includes(`${index + 1}. ${item.question}`)));
+  assert.equal(lines[lines.length - 1], "Thanks!");
+});
+
+test("builds a Hinglish message when most questions are Hinglish, and nothing when there are none", () => {
+  const ask = D.decode(P.SAMPLES.hi).filter((i) => i.kind === "ask");
+  assert.ok(D.buildMessage(ask).startsWith(P.MESSAGE.hi.open));
+  assert.equal(D.buildMessage([]), "");
+});

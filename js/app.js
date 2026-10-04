@@ -88,7 +88,54 @@
     $("ask-count").textContent = ask.length;
     $("ready-count").textContent = ready.length;
     $("ask-empty").hidden = ask.length > 0;
+    $("copy-questions").disabled = ask.length === 0;
     $("ready-empty").hidden = ready.length > 0;
+  }
+
+  var toastTimer = null;
+  function showToast(message) {
+    var toast = $("toast");
+    toast.textContent = message;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.hidden = true; }, 2600);
+  }
+
+  function openCopyDialog(text) {
+    var dialog = $("copy-dialog");
+    var box = $("copy-text");
+    box.value = text;
+    if (typeof dialog.showModal === "function") dialog.showModal(); else dialog.setAttribute("open", "");
+    box.focus();
+    box.select();
+  }
+
+  // Older way of copying, used when the Clipboard API is missing or refuses.
+  function legacyCopy(text) {
+    var helper = document.createElement("textarea");
+    helper.value = text;
+    helper.setAttribute("readonly", "");
+    helper.style.position = "fixed";
+    helper.style.opacity = "0";
+    document.body.appendChild(helper);
+    helper.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(helper);
+    return ok;
+  }
+
+  function copyQuestions() {
+    var ask = state.items.filter(function (i) { return i.kind === "ask"; });
+    var message = Decoder.buildMessage(ask);
+    if (!message) return;
+    var done = function () { showToast("Copied. Paste it in WhatsApp."); };
+    var fallback = function () { if (legacyCopy(message)) done(); else openCopyDialog(message); };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(message).then(done, fallback);
+    } else {
+      fallback();
+    }
   }
 
   function runDecode() {
@@ -106,5 +153,6 @@
 
   feedback.addEventListener("input", syncDecodeButton);
   decodeBtn.addEventListener("click", runDecode);
+  $("copy-questions").addEventListener("click", copyQuestions);
   syncDecodeButton();
 })();

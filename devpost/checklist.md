@@ -29,7 +29,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
   Learner check: Load the Hinglish sample, press Decode, and check that the vague words are highlighted and each question quotes the client's words.
   Commit: `Highlight vague feedback and suggest clarifying questions`
 
-- [ ] **3. You can copy all questions as one WhatsApp-ready message**
+- [x] **3. You can copy all questions as one WhatsApp-ready message**
   Becomes usable: Copy questions puts a greeting, numbered questions and a thank-you on the clipboard, with a confirmation, or opens a selectable box if copying is blocked.
   Why now: Sending the questions is the payoff of the kernel; it completes the main loop before smaller features.
   PRD ref: `prd.md > Copy Questions Message`, `prd.md > The Core Journey` (step 7)

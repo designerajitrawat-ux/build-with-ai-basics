@@ -230,6 +230,16 @@
     });
   }
 
+  // One message for WhatsApp: greeting, numbered questions, thanks. Language follows most of the questions.
+  function buildMessage(askItems) {
+    if (!askItems.length) return "";
+    var hinglish = askItems.filter(function (i) { return i.lang === "hi"; }).length;
+    var lang = hinglish > askItems.length - hinglish ? "hi" : "en";
+    var words = P.MESSAGE[lang];
+    var lines = askItems.map(function (item, index) { return (index + 1) + ". " + item.question; });
+    return words.open + "\n\n" + lines.join("\n") + "\n\n" + words.close;
+  }
+
   var API = {
     cleanText: cleanText,
     splitPoints: splitPoints,
@@ -237,6 +247,7 @@
     findVague: findVague,
     detectLanguage: detectLanguage,
     tagTask: tagTask,
+    buildMessage: buildMessage,
     decode: decode
   };
 

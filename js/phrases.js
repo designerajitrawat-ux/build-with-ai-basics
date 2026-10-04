@@ -220,6 +220,12 @@
       "header", "menu", "navbar", "nav", "sidebar", "page"] }
   ];
 
+  // The copied message around the numbered questions.
+  var MESSAGE = {
+    en: { open: "Hi! Thanks for the feedback. A few quick questions so I get this exactly right:", close: "Thanks!" },
+    hi: { open: "Hi! Feedback ke liye thanks. Bas kuch chhote sawaal, taaki main bilkul sahi bana sakoon:", close: "Thanks!" }
+  };
+
   var SAMPLES = {
     en: [
       "Hi! Saw the new homepage, overall nice work 👍",
@@ -258,6 +264,7 @@
     CONTRADICTION: CONTRADICTION,
     HINGLISH_MARKERS: HINGLISH_MARKERS,
     TAGS: TAGS,
+    MESSAGE: MESSAGE,
     SAMPLES: SAMPLES
   };
 

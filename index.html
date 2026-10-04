@@ -32,6 +32,7 @@
         <section class="list list-ask" aria-labelledby="ask-title">
           <header class="list-head">
             <h2 id="ask-title">Ask the client <span id="ask-count" class="count"></span></h2>
+            <button type="button" id="copy-questions" class="btn btn-primary btn-small">Copy questions</button>
           </header>
           <ol id="ask-list" class="items"></ol>
           <p id="ask-empty" class="empty" hidden>Nothing vague here. Your client was clear this time.</p>
@@ -46,6 +47,15 @@
       </div>
     </section>
   </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <dialog id="copy-dialog" class="copy-dialog" aria-labelledby="copy-dialog-title">
+    <h2 id="copy-dialog-title">Copy your questions</h2>
+    <p>Your browser didn't allow automatic copying. The message is selected below: press Ctrl+C (or Cmd+C), or long-press to copy on a phone.</p>
+    <textarea id="copy-text" rows="10" readonly></textarea>
+    <form method="dialog"><button class="btn">Close</button></form>
+  </dialog>
 
   <script src="js/phrases.js"></script>
   <script src="js/decoder.js"></script>
