@@ -69,6 +69,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 - [x] English switch for questions: the learner noted that judges may not read Hinglish and the hackathon is global, so every question (and the copied message) can be shown in English, with short meanings next to Hinglish words.
 - [x] UX and logic audit requested by the learner: list headings ending in a colon and sign-offs are no longer turned into tasks; "feel a bit off", "not loving", "friendly" and "premium but approachable" style feedback is now caught; "white space" is tagged Layout; the "How much?" label is now "Amount"; every label explains itself on hover.
 - [x] Learner asked that the coding tool not be named in the project: README now says "an AI coding agent", agent-specific install folders are no longer tracked, and new commits use the learner's GitHub identity.
+- [x] Improvement round the learner asked for before shipping: a clarity score in the summary (share of points ready to act on, updates when items move), more English vague phrases that judges are likely to type ("polished", "sleek", "not quite there", "surprise me", "more compelling", "on-brand", "a touch"), and praise lines like "Overall solid start" are ignored. Clear bug reports ("the form isn't working") stay in Ready to do.
 - [ ] Final review complete: feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

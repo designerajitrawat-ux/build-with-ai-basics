@@ -10,7 +10,7 @@
   var CHITCHAT = {
     greeting: /^(hi+|hello+|hey+|helo|hii+|dear\s+\w+|good\s+(morning|afternoon|evening)|namaste|namaskar)\b/i,
     whole: /^(thanks?( (you|so much|a lot|again|bro|bhai|sir|ji))*|thank you( so much| again)?|thx|ty|dhanyavaad|shukriya|ok+a*y*|k|done|sure|great|cool|got it|noted|haan( ji)?|ha|ji|hmm+|regards|best regards|warm regards|best|cheers|thanks (and|&) regards|<media omitted>|this message was deleted|you deleted this message)$/i,
-    praise: /\b(nice work|good work|great work|well done|good job|great job|looks good|looks great|looks nice|accha hai|achha hai|badhiya|mast hai|sahi hai|good effort)\b/i,
+    praise: /\b(nice work|good work|great work|well done|good job|great job|looks good|looks great|looks nice|accha hai|achha hai|badhiya|mast hai|sahi hai|good effort|solid start|good start|great start|nice start|solid work|love it|loving it|great stuff|nice job|well designed)\b/i,
     header: /^(here('s| is| are)? (my|the|some) (feedback|changes|comments|points)|feedback|changes|comments|few (points|changes)|some (points|changes)|kuch changes)\b.{0,30}:$/i,
     signoff: /^(let me know|lmk|talk soon|thanks in advance|looking forward|sent from my|(regards|best regards|kind regards|warm regards|best|cheers|thanks|thank you|thanks again|ty)[,!. ]+[\p{L} .]{1,30}$)/iu
   };
@@ -40,7 +40,7 @@
           "same as before", "like last time", "like the old one", "pehle jaisa", "pehle jaisi", "pehle wala",
           "jaisa bola tha", "jaisa bataya tha", "you know what i mean", "like that website", "like that site",
           "like the reference", "reference jaisa", "something like", "kuch aisa", "kuch waisa", "usi tarah",
-          "same vibe as",
+          "same vibe as", "on brand", "on-brand", "more on brand", "off brand", "off-brand", "brand feel",
           "re:jaisa\\s+(?:humne|maine|aapne)?\\s*(?:call\\s+(?:pe|par)\\s+)?(?:discuss|baat)\\s+(?:kiya|ki|hui)(?:\\s+th[ai])?"
         ],
         en: "When you say \"{phrase}\", which one exactly do you mean? A link or screenshot would make sure I match it.",
@@ -55,7 +55,8 @@
           "maybe", "may be", "not sure", "shayad", "dekh lo", "dekh lena", "dekh lijiye", "try karke dekho",
           "try kar ke dekho", "see what works", "see what looks good", "your call", "up to you", "jo theek lage",
           "jo sahi lage", "jo accha lage", "whatever you think", "whatever works", "or something", "ya kuch aur",
-          "if possible", "possible ho to", "agar ho sake"
+          "if possible", "possible ho to", "agar ho sake", "play around", "play with it", "explore some options",
+          "see what you can do", "do your magic", "surprise me", "go wild"
         ],
         en: "You wrote \"{phrase}\". Should I decide this one, or would you like me to send two options to pick from?",
         hi: "Aapne likha \"{phrase}\". Ye main tay kar doon, ya aapko 2 options bhejun jisme se aap chun lo?"
@@ -69,7 +70,8 @@
           phrases: [
             "make it pop", "re:pop(?!\\s*-?\\s*ups?(?![\\p{L}]))", "jazz it up", "jazz up", "spice it up", "spice up",
             "wow factor", "wow", "zing", "eye-catching", "eye catching", "stand out", "standout", "attractive",
-            "jaan daalo", "jaan dalo", "jaan daal do", "lively", "add some life", "more life"
+            "jaan daalo", "jaan dalo", "jaan daal do", "lively", "add some life", "more life", "more energy", "more energetic", "more dynamic", "more exciting",
+            "more interesting", "more personality", "more character", "make it sing"
           ],
           en: "When you say \"{phrase}\", what should change most: brighter colors, a bigger headline, or more contrast? A link to a design you like would help a lot.",
           hi: "\"{phrase}\" se aapka matlab kya hai: zyada bright colors, bada headline, ya zyada contrast? Koi pasandida design ka link bhej denge to bahut help hogi."
@@ -78,7 +80,8 @@
           phrases: [
             "premium", "classy", "classier", "elegant", "luxury", "luxurious", "rich look", "rich feel", "high end",
             "high-end", "sophisticated", "professional look", "more professional", "look professional",
-            "expensive look", "costly look"
+            "expensive look", "costly look", "polished", "more polished", "elevated", "sleek", "slick", "refined",
+            "upscale", "luxe"
           ],
           en: "For \"{phrase}\", should I go with more white space, fewer colors, or a more refined font? Is there a brand whose look feels \"{phrase}\" to you?",
           hi: "\"{phrase}\" ke liye kya karun: zyada khaali jagah, kam colors, ya zyada classy font? Koi brand jiska look aapko \"{phrase}\" lagta ho?"
@@ -87,7 +90,8 @@
           phrases: [
             "modern", "fresh", "trendy", "youthful", "stylish", "re:cool(?!\\s+(?:tones?|colou?rs?))", "funky",
             "edgy", "sexy", "contemporary", "latest style", "new age", "gen z", "more friendly", "friendly", "welcoming",
-            "approachable", "playful", "inviting", "warm feel", "fun"
+            "approachable", "playful", "inviting", "warm feel", "fun", "more minimal", "techy", "futuristic", "retro",
+            "vintage", "more corporate", "less corporate"
           ],
           en: "\"{phrase}\" can mean many things. Could you share one or two websites or posts whose style you'd call \"{phrase}\"?",
           hi: "\"{phrase}\" ke kai matlab ho sakte hain. Koi 1-2 website ya post bhej sakte ho jiska style aapko \"{phrase}\" lagta hai?"
@@ -144,7 +148,8 @@
           "busy", "cluttered", "crowded", "messy", "too much", "empty", "khaali khaali", "khali khali", "khaali",
           "khali", "unbalanced", "balance", "balanced", "breathing room", "more space", "flow", "adjust karo",
           "adjust kar do", "sahi jagah", "properly", "neat", "tidy",
-          "cleaner", "clean look", "clean it up"
+          "cleaner", "clean look", "clean it up", "less busy", "less cluttered", "feels heavy", "too heavy", "too tight",
+          "cramped", "more balanced", "more organized", "more organised"
         ],
         en: "When you say \"{phrase}\", which area bothers you most? A quick circle on a screenshot would help me fix exactly that spot.",
         hi: "\"{phrase}\" se aapka matlab kaunsa hissa hai? Screenshot par ek circle bana ke bhej do, main wahi jagah theek kar dunga."
@@ -158,7 +163,8 @@
           "catchy", "punchy", "better copy", "better text", "better wording", "better headline", "strong headline",
           "stronger headline", "impactful", "content theek", "content accha", "text accha", "text theek",
           "wording theek", "stylish font", "fancy font", "better font", "nice font", "accha font", "font accha",
-          "font stylish", "readable", "more readable", "professional font"
+          "font stylish", "readable", "more readable", "professional font", "snappier", "tighten the copy", "rework the copy",
+          "better messaging", "stronger cta", "more compelling", "compelling"
         ],
         en: "For \"{phrase}\", should I suggest new wording, or do you have the exact text you'd like to use?",
         hi: "\"{phrase}\" ke liye main naye shabd suggest karun, ya aapke paas exact text hai jo use karna hai?"
@@ -175,7 +181,9 @@
           "does not work for me", "not working for me", "i don't like it", "i dont like it", "don't like it",
           "dont like it", "pasand nahi aaya", "pasand nhi aaya", "accha nahi lag raha", "achha nahi lag raha",
           "acha nahi lag raha", "theek nahi lag raha", "sahi nahi lag raha", "looks off", "feels off",
-          "kuch ajeeb", "ajeeb lag raha", "not happy with", "not loving", "not a fan", "don't love", "dont love",
+          "kuch ajeeb", "ajeeb lag raha", "not happy with", "not loving", "not a fan", "don't love", "dont love", "something's off", "something is off", "not quite there",
+          "not quite right", "not there yet", "doesn't feel right", "does not feel right", "underwhelming", "meh",
+          "missing something",
           "re:(?:feels?|looks?|seems?)\\s+(?:a\\s+(?:bit|little)\\s+|kind\\s+of\\s+|slightly\\s+|kinda\\s+)off"
         ],
         en: "You mentioned \"{phrase}\". What feels off most: the colors, the layout, the images, or the text? Even one word helps me fix the right thing.",
@@ -189,7 +197,7 @@
         phrases: [
           "a little bit", "a little", "a bit", "a tad", "slightly", "somewhat", "kind of", "sort of", "kinda",
           "little more", "bit more", "little bigger", "little smaller", "thoda sa", "thoda", "thodi", "thode",
-          "zara sa", "zara", "halka sa"
+          "zara sa", "zara", "halka sa", "a touch", "a hair", "a smidge", "a tiny bit", "just a bit", "ever so slightly"
         ],
         en: "How much is \"{phrase}\" here: a small nudge (about 10%), clearly noticeable (about 25%), or a big change (50% or more)?",
         hi: "\"{phrase}\" matlab kitna: halka sa (lagbhag 10%), saaf dikhne layak (lagbhag 25%), ya bada badlaav (50% ya zyada)?"

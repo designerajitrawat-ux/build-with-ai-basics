@@ -170,3 +170,22 @@ test("English questions explain Hinglish words for readers who don't speak Hindi
   const [ref] = D.decode("Jaisa humne call pe discuss kiya tha waisa footer bana do");
   assert.match(ref.questions.en, /\(as we discussed\)/);
 });
+
+test("catches more English vague feedback without flagging clear bug reports", () => {
+  const kind = (text) => D.decode(text)[0].category;
+  assert.equal(kind("Can we make it more polished and sleek?"), "Mood and style");
+  assert.equal(kind("It is not quite there yet"), "Gut feeling");
+  assert.equal(kind("Play around with the footer, surprise me"), "Undecided");
+  assert.equal(kind("Make sure the CTA is more compelling"), "Text");
+  assert.equal(kind("Use on-brand colors for the buttons"), "Unclear reference");
+  assert.equal(kind("Increase the logo size a touch"), "Amount");
+  assert.equal(D.decode("The contact form isnt working on Safari")[0].kind, "ready");
+  assert.equal(D.decode("Use high quality images in the gallery")[0].kind, "ready");
+  assert.deepEqual(D.splitPoints("Overall solid start! Notes:"), []);
+});
+
+test("clarity score is the share of points that are ready to do", () => {
+  assert.equal(D.clarityScore(D.decode(P.SAMPLES.en)), 55);
+  assert.equal(D.clarityScore(D.decode(P.SAMPLES.hi)), 50);
+  assert.equal(D.clarityScore([]), 0);
+});

@@ -476,3 +476,4 @@ textarea:focus-visible { outline: none; border-color: var(--tomato); box-shadow:
 
 .seg.is-active { background: var(--ink); color: #fff; }
 .kind-label[title] { cursor: help; }
+.chip-clarity { background: var(--ink); color: #fff; cursor: help; }

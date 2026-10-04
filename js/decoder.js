@@ -281,6 +281,13 @@
     return words.open + "\n\n" + lines.join("\n") + "\n\n" + words.close;
   }
 
+  // Share of points the designer can act on right away (0 to 100).
+  function clarityScore(items) {
+    if (!items.length) return 0;
+    var ready = items.filter(function (i) { return i.kind === "ready"; }).length;
+    return Math.round((ready / items.length) * 100);
+  }
+
   var API = {
     cleanText: cleanText,
     splitPoints: splitPoints,
@@ -290,6 +297,7 @@
     tagTask: tagTask,
     buildMessage: buildMessage,
     questionFor: questionFor,
+    clarityScore: clarityScore,
     decode: decode
   };
 

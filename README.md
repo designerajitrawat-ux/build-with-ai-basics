@@ -18,8 +18,9 @@ Some of that is a clear task. Some of it ("thoda", "premium", "kuch alag", "make
 2. **Decode** splits it into separate points, drops greetings and thanks, and sorts every point into:
    - **Ask the client:** vague points, with the vague words highlighted, a label for the kind of vagueness (Mood and style, Mixed signals, Amount, Unclear reference and more) and one clarifying question that quotes the client's own words. Questions appear in the client's language, or switch every question to English (Hinglish words get a short English meaning, like "kuch alag" (something different)).
    - **Ready to do:** clear requests as a checklist with small tags (Text, Color, Image, Layout).
-3. **Copy questions** puts one ready-to-send message on your clipboard: greeting, numbered questions, thanks.
-4. **Tick tasks off** as you work, and move any point between the lists with one tap if the app guessed wrong.
+3. A **clarity score** shows how much of the message you can act on right away.
+4. **Copy questions** puts one ready-to-send message on your clipboard: greeting, numbered questions, thanks.
+5. **Tick tasks off** as you work, and move any point between the lists with one tap if the app guessed wrong.
 
 ## Try it
 

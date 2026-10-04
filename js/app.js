@@ -122,6 +122,9 @@
     summary.appendChild(document.createTextNode(state.items.length + " points found"));
     summary.appendChild(el("span", "chip chip-ask", ask.length + " to ask"));
     summary.appendChild(el("span", "chip chip-ready", ready.length + " ready"));
+    var clarity = el("span", "chip chip-clarity", "Clarity " + Decoder.clarityScore(state.items) + "%");
+    clarity.title = "Share of points you can act on right away, without asking the client.";
+    summary.appendChild(clarity);
 
     ask.forEach(function (item) { askList.appendChild(renderAskItem(item)); });
     ready.forEach(function (item) { readyList.appendChild(renderReadyItem(item)); });

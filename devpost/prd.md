@@ -14,7 +14,7 @@ Develops `scope.md > The Core Loop` and `scope.md > What "Working" Looks Like`.
 1. The designer opens the page. They see the name, a one-line promise, a large text box, two sample buttons ("Try an English sample", "Try a Hinglish sample") and a **Decode** button.
 2. They paste the client's message (from WhatsApp, email, anywhere) or load a sample.
 3. They press **Decode**.
-4. Within a second, a summary line appears, for example "9 points found: 3 to ask about, 6 ready to do", followed by two lists.
+4. Within a second, a summary line appears, for example "9 points found: 3 to ask, 6 ready, Clarity 67%", followed by two lists. The clarity score is the share of points that can be acted on right away.
 5. **Ask the client** lists every vague point. The vague words are highlighted like a marker on paper, a small label says what kind of vagueness it is (for example "Mood and style"), and under it sits one clarifying question in the client's own language.
 6. **Ready to do** lists every clear point as a checklist.
 7. They press **Copy questions**. One message with a greeting, the numbered questions and a thank-you is copied, ready to paste into WhatsApp. A small confirmation appears.
