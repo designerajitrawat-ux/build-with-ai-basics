@@ -19,7 +19,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
   Learner check: Open `index.html`, press "Try an English sample", then Decode, and see each request on its own line.
   Commit: `Split pasted feedback into points`
 
-- [ ] **2. Vague points are highlighted and get a question in the client's language**
+- [x] **2. Vague points are highlighted and get a question in the client's language**
   Becomes usable: Decode now sorts points into Ask the client and Ready to do; vague words glow like a highlighter, each Ask item shows its kind and one clarifying question, in English or Hinglish to match the client.
   Why now: This is the unique kernel; it must work early, not be added at the end.
   PRD ref: `prd.md > Vague Phrase Detection`, `prd.md > Clarifying Questions`, `prd.md > Screens and Layout`

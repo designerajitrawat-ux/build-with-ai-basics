@@ -28,7 +28,22 @@
 
     <section id="results" class="results" hidden aria-live="polite">
       <p id="summary" class="summary"></p>
-      <ol id="points" class="points"></ol>
+      <div id="lists" class="lists">
+        <section class="list list-ask" aria-labelledby="ask-title">
+          <header class="list-head">
+            <h2 id="ask-title">Ask the client <span id="ask-count" class="count"></span></h2>
+          </header>
+          <ol id="ask-list" class="items"></ol>
+          <p id="ask-empty" class="empty" hidden>Nothing vague here. Your client was clear this time.</p>
+        </section>
+        <section class="list list-ready" aria-labelledby="ready-title">
+          <header class="list-head">
+            <h2 id="ready-title">Ready to do <span id="ready-count" class="count"></span></h2>
+          </header>
+          <ul id="ready-list" class="items"></ul>
+          <p id="ready-empty" class="empty" hidden>Nothing to start yet. Send the questions first.</p>
+        </section>
+      </div>
     </section>
   </main>
 
