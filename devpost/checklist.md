@@ -49,7 +49,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
   Learner check: Tick a few tasks, move one item to the other list, then press New feedback.
   Commit: `Add task ticking, moving items and reset`
 
-- [ ] **5. The finished look, with empty states, on laptop and phone**
+- [x] **5. The finished look, with empty states, on laptop and phone**
   Becomes usable: The desk-and-highlighter design in full: fonts, colors, marker-style highlight, tick animation, friendly empty and nothing-found states, two-column laptop layout and stacked phone layout, plus README and LICENSE.
   Why now: The design criterion judges a complete, coherent product; polish lands once behavior is stable so it is not redone.
   PRD ref: `prd.md > Look and Feel`, `prd.md > States and Boundaries`, `prd.md > Screens and Layout`
@@ -73,3 +73,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 - [ ] Learning wrap-up and `devpost/app-map.html` complete
 
 ## Revisions
+- Slice 2: a line with one Hinglish marker word is now treated as Hinglish when it has up to six words (was four), because "Menu me \"Contact\" add karo" was read as English. Internal change; behavior matches `prd.md > Clarifying Questions`.
+- Slice 2: removed "adjust", "set karo", "royal" and plain "halka" from the phrase library after checking that they also appear in clear, specific requests (for example "set karo font size 16", "royal blue").
+- Slice 5: muted text color changed from `#6B655C` to `#625D55`, and placeholder and finished-task text to `#766F65`, so every text color reaches a contrast ratio of at least 4.5:1. `spec.md > Look and Feel` updated.
+- Slice 5: small polish within the agreed boundary: a three-step "how it works" line under the promise, a Ctrl + Enter shortcut for Decode, and a `docs/screenshot.png` for the README. `spec.md > File Structure` updated.

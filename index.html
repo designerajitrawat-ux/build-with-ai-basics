@@ -5,24 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Make It Pop: decode vague client feedback</title>
   <meta name="description" content="Paste your client's messy feedback. Get a clear to-do list, plus the questions to ask about the vague bits.">
+  <meta name="theme-color" content="#FBF8F1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='22' width='52' height='22' rx='6' fill='%23FFE066' transform='rotate(-6 32 33)'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='26' font-weight='700' text-anchor='middle' fill='%231D1C1A'%3Epop%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="page">
     <header class="masthead">
-      <h1 class="wordmark">Make it pop</h1>
-      <p class="promise">Paste your client's feedback. Get a clear to-do list, plus the questions to ask about the vague bits.</p>
+      <p class="eyebrow">For designers whose clients send feedback on WhatsApp</p>
+      <h1 class="wordmark">Make it <span class="marker">pop</span></h1>
+      <p class="promise">Paste your client's messy feedback. Get a clear to-do list, plus the exact questions to ask about the vague bits.</p>
+      <ol class="steps" aria-label="How it works">
+        <li><span class="step-num">1</span>Paste the message</li>
+        <li><span class="step-num">2</span>Decode</li>
+        <li><span class="step-num">3</span>Ask first, then tick off</li>
+      </ol>
     </header>
 
-    <section class="input-card" aria-label="Client feedback">
+    <section class="card input-card" aria-label="Client feedback">
       <label class="input-label" for="feedback">Client feedback</label>
-      <textarea id="feedback" rows="9" placeholder="Paste the client's message here. WhatsApp, email, anything."></textarea>
+      <textarea id="feedback" rows="9" spellcheck="false" placeholder="Paste the client's message here. WhatsApp chat, email, anything. English or Hinglish both work."></textarea>
       <div class="input-actions">
         <div class="samples">
-          <button type="button" class="btn btn-ghost" data-sample="en">Try an English sample</button>
-          <button type="button" class="btn btn-ghost" data-sample="hi">Try a Hinglish sample</button>
+          <span class="samples-label">No message handy?</span>
+          <button type="button" class="btn btn-ghost" data-sample="en">English sample</button>
+          <button type="button" class="btn btn-ghost" data-sample="hi">Hinglish sample</button>
         </div>
-        <button type="button" id="decode" class="btn btn-primary" disabled>Decode</button>
+        <div class="decode-wrap">
+          <span class="shortcut" aria-hidden="true">Ctrl + Enter</span>
+          <button type="button" id="decode" class="btn btn-primary btn-large" disabled>Decode</button>
+        </div>
       </div>
     </section>
 
@@ -32,17 +47,23 @@
         <button type="button" id="new-feedback" class="btn btn-ghost btn-small">New feedback</button>
       </div>
       <div id="lists" class="lists">
-        <section class="list list-ask" aria-labelledby="ask-title">
+        <section class="card list list-ask" aria-labelledby="ask-title">
           <header class="list-head">
-            <h2 id="ask-title">Ask the client <span id="ask-count" class="count"></span></h2>
+            <div>
+              <h2 id="ask-title" class="list-title"><span class="list-icon" aria-hidden="true">?</span>Ask the client <span id="ask-count" class="count"></span></h2>
+              <p class="list-hint">Send these before you start, so you don't redo work.</p>
+            </div>
             <button type="button" id="copy-questions" class="btn btn-primary btn-small">Copy questions</button>
           </header>
           <ol id="ask-list" class="items"></ol>
           <p id="ask-empty" class="empty" hidden>Nothing vague here. Your client was clear this time.</p>
         </section>
-        <section class="list list-ready" aria-labelledby="ready-title">
+        <section class="card list list-ready" aria-labelledby="ready-title">
           <header class="list-head">
-            <h2 id="ready-title">Ready to do <span id="ready-count" class="count"></span></h2>
+            <div>
+              <h2 id="ready-title" class="list-title"><span class="list-icon" aria-hidden="true">✓</span>Ready to do <span id="ready-count" class="count"></span></h2>
+              <p class="list-hint">Clear requests. Tick them off as you go.</p>
+            </div>
           </header>
           <div id="progress" class="progress">
             <div class="progress-track"><span id="progress-fill" class="progress-fill"></span></div>
@@ -54,6 +75,10 @@
         </section>
       </div>
     </section>
+
+    <footer class="footer">
+      <p><strong>Private by design.</strong> Everything runs in your browser. Nothing you paste leaves your device.</p>
+    </footer>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
@@ -62,7 +87,7 @@
     <h2 id="copy-dialog-title">Copy your questions</h2>
     <p>Your browser didn't allow automatic copying. The message is selected below: press Ctrl+C (or Cmd+C), or long-press to copy on a phone.</p>
     <textarea id="copy-text" rows="10" readonly></textarea>
-    <form method="dialog"><button class="btn">Close</button></form>
+    <form method="dialog"><button class="btn btn-ghost">Close</button></form>
   </dialog>
 
   <script src="js/phrases.js"></script>

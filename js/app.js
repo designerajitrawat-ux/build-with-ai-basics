@@ -107,13 +107,18 @@
     var ask = state.items.filter(function (i) { return i.kind === "ask"; });
     var ready = state.items.filter(function (i) { return i.kind === "ready"; });
 
+    summary.textContent = "";
     if (state.items.length === 0) {
+      summary.className = "summary nothing-found";
       summary.textContent = "We couldn't find any requests in this message. Try pasting the full feedback.";
       lists.hidden = true;
       return;
     }
     lists.hidden = false;
-    summary.textContent = state.items.length + " points found: " + ask.length + " to ask about, " + ready.length + " ready to do";
+    summary.className = "summary";
+    summary.appendChild(document.createTextNode(state.items.length + " points found"));
+    summary.appendChild(el("span", "chip chip-ask", ask.length + " to ask"));
+    summary.appendChild(el("span", "chip chip-ready", ready.length + " ready"));
 
     ask.forEach(function (item) { askList.appendChild(renderAskItem(item)); });
     ready.forEach(function (item) { readyList.appendChild(renderReadyItem(item)); });
@@ -212,6 +217,7 @@
   function runDecode() {
     state.items = Decoder.decode(feedback.value);
     render();
+    results.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   }
 
   document.querySelectorAll("[data-sample]").forEach(function (button) {
@@ -223,6 +229,12 @@
   });
 
   feedback.addEventListener("input", syncDecodeButton);
+  feedback.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey) && !decodeBtn.disabled) {
+      event.preventDefault();
+      runDecode();
+    }
+  });
   decodeBtn.addEventListener("click", runDecode);
   $("copy-questions").addEventListener("click", copyQuestions);
   $("new-feedback").addEventListener("click", startOver);

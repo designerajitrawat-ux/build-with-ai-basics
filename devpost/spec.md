@@ -47,7 +47,7 @@ PRD ref: `prd.md > The Core Journey`.
 ## Look and Feel
 Carried from `prd.md > Look and Feel`.
 
-- **Color tokens (CSS variables):** paper `#FBF8F1`, ink `#1D1C1A`, muted ink `#6B655C`, line `#E8E1D3`, card `#FFFFFF`, highlighter `#FFE066`, tomato (main action, Ask accents) `#C8371C`, done green `#2E7D4F`. Text on tomato is white; colors are checked for readable contrast during the build.
+- **Color tokens (CSS variables):** paper `#FBF8F1`, ink `#1D1C1A`, muted ink `#625D55`, line `#E8E1D3`, card `#FFFFFF`, highlighter `#FFE066`, tomato (main action, Ask accents) `#C8371C`, done green `#2E7D4F`. Text on tomato is white; colors are checked for readable contrast during the build.
 - **Type:** Fraunces for the wordmark and section titles; DM Sans for body, buttons and lists. Base size 16px, generous line height.
 - **Highlighter:** a background stroke behind the matched words, slightly rotated and with uneven ends (gradient plus small padding), not a flat box.
 - **Layout:** centred column up to about 1100px wide; results in two columns from about 820px wide, stacked below that.
@@ -106,6 +106,8 @@ build-with-ai-basics/
 │   └── decoder.test.js   # node --test checks for samples and edge cases
 ├── README.md             # what it is, how to try it, how it works
 ├── LICENSE               # MIT open source license (required by the hackathon)
+├── docs/
+│   └── screenshot.png    # README screenshot
 ├── devpost/              # planning documents from the Devpost Learn skills
 ├── .agents/ skills-lock.json   # the installed Devpost Learn skill pack
 └── .gitignore
