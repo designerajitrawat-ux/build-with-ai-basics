@@ -45,7 +45,7 @@ Requires Node.js 20 or newer. No packages to install.
 
 ## How it was built
 
-Built by [designerajitrawat-ux](https://github.com/designerajitrawat-ux) for Devpost's **Build With AI: Basics** hackathon, using the Devpost Learn skill pack with an AI coding agent: planning first, building after. The planning documents are in [`devpost/`](devpost/): [scope](devpost/scope.md), [product requirements](devpost/prd.md), [technical spec](devpost/spec.md) and the [build checklist](devpost/checklist.md).
+Built by [Ajit Rawat](https://github.com/designerajitrawat-ux) for Devpost's **Build With AI: Basics** hackathon, using the Devpost Learn skill pack with an AI coding agent: planning first, building after. The planning documents are in [`devpost/`](devpost/): [scope](devpost/scope.md), [product requirements](devpost/prd.md), [technical spec](devpost/spec.md) and the [build checklist](devpost/checklist.md).
 
 Fonts: [Fraunces](https://fonts.google.com/specimen/Fraunces) and [DM Sans](https://fonts.google.com/specimen/DM+Sans) from Google Fonts (SIL Open Font License).
 
