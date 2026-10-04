@@ -287,6 +287,48 @@
     hi: { open: "Hi! Feedback ke liye thanks. Bas kuch chhote sawaal, taaki main bilkul sahi bana sakoon:", close: "Thanks!" }
   };
 
+  // The progress report sent back to the client. {name}, {project}, {date} and the counts are filled in by the decoder.
+  var REPORT = {
+    en: {
+      greet: "Hi{name}! Here's an update on your feedback{project} ({date}):",
+      project: " for {project}",
+      done: "Done",
+      doing: "In progress",
+      waiting: "Waiting on your answer",
+      total: "{total} {changes} in total: {done} done, {doing} in progress, {waiting} waiting on you.",
+      change: "change",
+      changes: "changes",
+      close: "Thanks!",
+      title: "Feedback report",
+      untitled: "Your feedback, change by change",
+      client: "Client",
+      from: "From",
+      date: "Date",
+      totalLabel: "Total changes",
+      review: "Your review",
+      reviewNote: "Tick each finished change once you've checked it, or reply with what should still change."
+    },
+    hi: {
+      greet: "Hi{name}! Aapke feedback ka update{project} ({date}):",
+      project: ", {project}",
+      done: "Ho gaya",
+      doing: "Kaam chal raha hai",
+      waiting: "Aapke jawab ka intezaar",
+      total: "Total {total} {changes}: {done} ho gaye, {doing} par kaam chal raha hai, {waiting} aapke jawab par ruke hain.",
+      change: "change",
+      changes: "changes",
+      close: "Thanks!",
+      title: "Feedback report",
+      untitled: "Aapka feedback, ek ek change",
+      client: "Client",
+      from: "From",
+      date: "Date",
+      totalLabel: "Total changes",
+      review: "Aapka review",
+      reviewNote: "Har change check karke tick kar dijiye, ya bataiye ki abhi kya badalna hai."
+    }
+  };
+
   // Question used when the designer moves a point to "Ask the client" themselves.
   var GENERIC = {
     label: "Your pick",
@@ -337,6 +379,7 @@
     GLOSS: GLOSS,
     GLOSS_PATTERNS: GLOSS_PATTERNS,
     MESSAGE: MESSAGE,
+    REPORT: REPORT,
     GENERIC: GENERIC,
     SAMPLES: SAMPLES
   };

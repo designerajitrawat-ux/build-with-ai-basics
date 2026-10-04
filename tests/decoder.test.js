@@ -191,3 +191,84 @@ test("clarity score is the share of points that are ready to do", () => {
   assert.equal(D.clarityScore(D.decode(P.SAMPLES.hi)), 50);
   assert.equal(D.clarityScore([]), 0);
 });
+
+test("finds the client's name in a WhatsApp export", () => {
+  assert.equal(D.detectSender(P.SAMPLES.hi), "Rohit");
+  assert.equal(D.detectSender("04/10/2026, 23:02 - Priya: Logo bada karo\n04/10/2026, 23:03 - Me: ok\n04/10/2026, 23:04 - Priya: Font change karo"), "Priya");
+  assert.equal(D.detectSender(P.SAMPLES.en), "");
+});
+
+test("report sorts points into done, in progress and waiting on the client", () => {
+  const items = D.decode(P.SAMPLES.en);
+  items.filter((i) => i.kind === "ready").slice(0, 4).forEach((i) => { i.done = true; });
+  const data = D.reportData(items);
+  assert.equal(data.total, 11);
+  assert.equal(data.done.length, 4);
+  assert.equal(data.doing.length, 2);
+  assert.equal(data.waiting.length, 5);
+});
+
+test("builds an English report message with names, sections and totals", () => {
+  const items = D.decode(P.SAMPLES.en);
+  items.filter((i) => i.kind === "ready").forEach((i) => { i.done = true; });
+  const text = D.buildReport(items, { client: "Sam", project: "Homepage", date: "4 Oct 2026", from: "Ajit" });
+  assert.match(text, /^Hi Sam! Here's an update on your feedback for Homepage \(4 Oct 2026\):/);
+  assert.match(text, /✅ Done \(6\)\n• Change the button text to "Book a free call"/);
+  assert.doesNotMatch(text, /In progress/);
+  assert.match(text, /❓ Waiting on your answer \(5\)\n• "The hero section feels a bit empty"\n   When you say "empty"/);
+  assert.match(text, /11 changes in total: 6 done, 0 in progress, 5 waiting on you\.\nThanks!\nAjit$/);
+});
+
+test("report follows the question language and works without names", () => {
+  const items = D.decode(P.SAMPLES.hi);
+  const hi = D.buildReport(items, {});
+  assert.match(hi, /^Hi! Aapke feedback ka update:/);
+  assert.match(hi, /⏳ Kaam chal raha hai \(4\)/);
+  assert.match(hi, /Total 8 changes: 0 ho gaye, 4 par kaam chal raha hai, 4 aapke jawab par ruke hain\./);
+  const en = D.buildReport(items, { mode: "en" });
+  assert.match(en, /^Hi! Here's an update on your feedback:/);
+  assert.match(en, /"thoda" \(a little\)/);
+  assert.equal(D.buildReport([], {}), "");
+});
+
+test("rebuilds the client's messages from a WhatsApp screenshot", () => {
+  const expected = [
+    "Hi bhai, design dekha",
+    "Logo thoda bada karo",
+    "Header ka color blue kar do aur menu me \"Contact\" add karo",
+    "Poora page thoda premium lagna chahiye, abhi kuch jam nahi raha",
+    "Banner me kuch alag try karo",
+    "Font size 16 se 18 kar do",
+    "Jaisa humne call pe discuss kiya tha waisa footer bana do",
+    "Product photos ki quality improve karo, blur lag rahi hain"
+  ].join("\n");
+  for (const mode of ["light", "dark"]) {
+    const chat = D.chatFromScreenshot(require("./fixtures/whatsapp-ocr-" + mode + ".json"));
+    assert.equal(chat.text, expected, mode + " mode text");
+    assert.equal(chat.sender, "Rohit", mode + " mode sender");
+  }
+});
+
+test("screenshot text decodes like a pasted chat", () => {
+  const chat = D.chatFromScreenshot(require("./fixtures/whatsapp-ocr-light.json"));
+  const items = D.decode(chat.text);
+  assert.equal(items.length, 8);
+  assert.equal(items.filter((i) => i.kind === "ask").length, 4);
+});
+
+test("screenshot cleanup keeps prices, drops your own messages and handles non-chat images", () => {
+  const line = (text, x0, y0) => ({ text, x0, y0, x1: x0 + 300, y1: y0 + 30 });
+  const chat = D.chatFromScreenshot({ width: 1000, height: 2000, lines: [
+    line("9:41", 40, 10),
+    line("< 3 Priya Sharma", 60, 80),
+    line("Change the price to 12.50 11:02 AM", 50, 400),
+    line("Sure, will do 11:03 AM vv", 500, 480),
+    line("Make the logo pop 11.04 am", 50, 560)
+  ] });
+  assert.equal(chat.text, "Change the price to 12.50\nMake the logo pop");
+  assert.equal(chat.sender, "Priya Sharma");
+  const page = D.chatFromScreenshot({ lines: [line("Please make the header bigger", 200, 100), line("and the font a bit bolder", 200, 135)] });
+  assert.equal(page.text, "Please make the header bigger and the font a bit bolder");
+  assert.equal(page.sender, "");
+  assert.deepEqual(D.chatFromScreenshot({ lines: [] }), { text: "", sender: "" });
+});

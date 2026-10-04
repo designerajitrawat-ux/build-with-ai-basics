@@ -288,6 +288,134 @@
     return Math.round((ready / items.length) * 100);
   }
 
+  // The client's name from a WhatsApp export: the sender who wrote the most lines, without "(Client)" style notes.
+  var SENDER = /^\s*\[?\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{2,4},?\s+\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]\.?\s?m\.?)?\]?\s*(?:-\s*)?([^:\n]{1,40}):/i;
+  function detectSender(raw) {
+    var counts = {};
+    var best = "";
+    String(raw || "").split(/\r?\n/).forEach(function (line) {
+      var m = SENDER.exec(line);
+      if (!m) return;
+      var name = m[1].replace(/\([^)]*\)/g, "").replace(/\s+/g, " ").trim();
+      if (!name || /^\+?[\d\s]+$/.test(name)) return;
+      counts[name] = (counts[name] || 0) + 1;
+      if (!best || counts[name] > counts[best]) best = name;
+    });
+    return best;
+  }
+
+  // ---------- Screenshots ----------
+  // Text recognition gives lines with their position. In a WhatsApp screenshot every message bubble ends with
+  // its time ("11:02 AM", ticks on your own messages), the client's bubbles sit on the left, and the header,
+  // date chips, encryption notice and typing bar carry no time. That is enough to rebuild the client's messages.
+  var TIME_AT_END = /\s*(?:edited\s+)?(?:\d{1,2}:\d{2}(?:\s*[ap]\.?\s?[mv]\.?)?|\d{1,2}\.\d{2}\s*[ap]\.?\s?[mv]\.?)(?:\s*[✓✔vVwW~\/\\]{1,2}){0,2}\s*$/i;
+  var NOT_A_NAME = /^(online|typing|last seen|tap here|click here|today|yesterday)\b/i;
+
+  function median(values) {
+    var sorted = values.slice().sort(function (a, b) { return a - b; });
+    return sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0;
+  }
+
+  function cleanName(text) {
+    return text.replace(/\([^)]*\)/g, "").replace(/^[^\p{L}]+/u, "").replace(/\s+/g, " ").trim();
+  }
+
+  function chatFromScreenshot(ocr) {
+    var lines = ((ocr && ocr.lines) || [])
+      .map(function (l) { return { text: String(l.text || "").replace(/\s+/g, " ").trim(), x0: l.x0, y0: l.y0, x1: l.x1, y1: l.y1 }; })
+      .filter(function (l) { return l.text; })
+      .sort(function (a, b) { return a.y0 - b.y0; });
+    if (!lines.length) return { text: "", sender: "" };
+    var width = ocr.width || Math.max.apply(null, lines.map(function (l) { return l.x1; }));
+    var height = ocr.height || Math.max.apply(null, lines.map(function (l) { return l.y1; }));
+    var lineHeight = median(lines.map(function (l) { return l.y1 - l.y0; }));
+    var isChat = lines.some(function (l) { return TIME_AT_END.test(l.text); });
+
+    // The chat header near the top holds the client's name.
+    var sender = "";
+    lines.forEach(function (l) {
+      if (sender || l.y1 > height * 0.15 || TIME_AT_END.test(l.text) || NOT_A_NAME.test(l.text) || !/\p{L}{2}/u.test(l.text)) return;
+      sender = cleanName(l.text);
+    });
+
+    // Lines that sit close together and start at the same left edge belong to one bubble; a time closes it.
+    var groups = [];
+    var current = null;
+    lines.forEach(function (l) {
+      var continues = current && l.y0 - current.y1 < lineHeight && Math.abs(l.x0 - current.x0) < width * 0.04;
+      if (!continues) {
+        if (current) groups.push(current);
+        current = { parts: [], x0: l.x0, y1: l.y1, closed: false };
+      }
+      current.parts.push(l.text);
+      current.y1 = l.y1;
+      if (TIME_AT_END.test(l.text)) { current.closed = true; groups.push(current); current = null; }
+    });
+    if (current) groups.push(current);
+
+    var messages = groups
+      .filter(function (g) { return !isChat || (g.closed && g.x0 < width * 0.15); })
+      .map(function (g) { return g.parts.join(" ").replace(TIME_AT_END, "").trim(); })
+      .filter(function (text) { return /\p{L}/u.test(text); });
+    return { text: messages.join("\n"), sender: isChat ? sender : "" };
+  }
+
+  // Where every point stands for the report: finished, still being worked on, or waiting on the client.
+  function reportData(items) {
+    var ready = items.filter(function (i) { return i.kind === "ready"; });
+    return {
+      total: items.length,
+      done: ready.filter(function (i) { return i.done; }),
+      doing: ready.filter(function (i) { return !i.done; }),
+      waiting: items.filter(function (i) { return i.kind === "ask"; })
+    };
+  }
+
+  // The report follows the same language choice as the questions: English, or the language most of the feedback used.
+  function reportLang(items, mode) {
+    if (mode === "en" || !items.length) return "en";
+    var hinglish = items.filter(function (i) { return i.lang === "hi"; }).length;
+    return hinglish > items.length - hinglish ? "hi" : "en";
+  }
+
+  function fill(template, values) {
+    return template.replace(/\{(\w+)\}/g, function (all, key) { return values[key] !== undefined ? values[key] : all; });
+  }
+
+  // One WhatsApp-ready report: greeting, what is done, what is in progress, what waits on the client, totals.
+  function buildReport(items, opts) {
+    opts = opts || {};
+    if (!items.length) return "";
+    var lang = reportLang(items, opts.mode);
+    var w = P.REPORT[lang];
+    var data = reportData(items);
+    var name = (opts.client || "").trim();
+    var project = (opts.project || "").trim();
+    var out = [fill(w.greet, {
+      name: name ? " " + name : "",
+      project: project ? fill(w.project, { project: project }) : "",
+      date: opts.date || ""
+    }).replace(" ()", "")];
+    var section = function (icon, label, list, line) {
+      if (!list.length) return;
+      out.push("", icon + " " + label + " (" + list.length + ")");
+      list.forEach(function (item) { out.push(line(item)); });
+    };
+    section("✅", w.done, data.done, function (i) { return "• " + i.text; });
+    section("⏳", w.doing, data.doing, function (i) { return "• " + i.text; });
+    section("❓", w.waiting, data.waiting, function (i) { return "• \"" + i.text + "\"\n   " + questionFor(i, opts.mode); });
+    out.push("", fill(w.total, {
+      total: data.total,
+      changes: data.total === 1 ? w.change : w.changes,
+      done: data.done.length,
+      doing: data.doing.length,
+      waiting: data.waiting.length
+    }));
+    var from = (opts.from || "").trim();
+    out.push(w.close + (from ? "\n" + from : ""));
+    return out.join("\n");
+  }
+
   var API = {
     cleanText: cleanText,
     splitPoints: splitPoints,
@@ -298,6 +426,11 @@
     buildMessage: buildMessage,
     questionFor: questionFor,
     clarityScore: clarityScore,
+    detectSender: detectSender,
+    chatFromScreenshot: chatFromScreenshot,
+    reportData: reportData,
+    reportLang: reportLang,
+    buildReport: buildReport,
     decode: decode
   };
 

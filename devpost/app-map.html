@@ -54,12 +54,13 @@
 
   <h2>What the app is</h2>
   <div class="card">
-    <p style="margin-top:0">Make It Pop is one web page that runs fully in the browser. You paste a client's feedback, press Decode, and get two lists: <strong>Ask the client</strong> (vague points, each with a clarifying question) and <strong>Ready to do</strong> (clear tasks to tick off). There is no server and no AI service inside the app.</p>
-    <p style="margin-bottom:0">It has three main pieces:</p>
+    <p style="margin-top:0">Make It Pop runs fully in the browser. You paste a client's feedback (or add a WhatsApp screenshot), press Decode, and a second screen walks the round: <strong>Ask the client</strong> (vague points, each with a clarifying question), <strong>Ready to do</strong> (clear tasks to tick off) and <strong>Report back</strong> (a message or PDF for the client). There is no server and no AI service inside the app.</p>
+    <p style="margin-bottom:0">It has four main pieces:</p>
     <ul style="margin-bottom:0">
-      <li><code>js/phrases.js</code>: the hand-made library of vague phrases, question templates, the copy message wording and the two samples.</li>
+      <li><code>js/phrases.js</code>: the hand-made library of vague phrases, question templates, the wording of the questions message and the report, and the two text samples.</li>
       <li><code>js/decoder.js</code>: the logic. It turns raw text into items. It has no page code, so the tests in <code>tests/decoder.test.js</code> load it directly with Node.</li>
-      <li><code>js/app.js</code>: the page. It reads the text box, calls the decoder, draws the lists and handles clicks.</li>
+      <li><code>js/app.js</code>: the page. It reads the text box, calls the decoder, switches between the two screens, draws the lists and runs the two sheets (send questions, report).</li>
+      <li><code>js/screenshot.js</code>: reads WhatsApp screenshots on the device with Tesseract.js, then hands the recognised lines to <code>chatFromScreenshot</code> in the decoder.</li>
     </ul>
   </div>
 
@@ -100,12 +101,16 @@
   <ol class="route">
     <li class="card">
       <strong>The click: <code>js/app.js</code>, search for <code>function runDecode</code></strong>
-      <p>The Decode button is wired to <code>runDecode</code>. It passes the text box value to the decoder, keeps the result in <code>state.items</code>, then calls <code>render</code>.</p>
+      <p>The Decode button is wired to <code>runDecode</code>. It passes the text box value to the decoder, keeps the result in <code>state.items</code>, picks up the client's name, calls <code>render</code> and switches to the round screen with <code>showScreen</code>.</p>
       <details><summary>Show the code</summary>
 <pre><code>function runDecode() {
-  state.items = Decoder.decode(feedback.value);
+  var items = Decoder.decode(feedback.value);
+  ...
+  state.items = items;
+  ...
   render();
   ...
+  showScreen(&quot;work&quot;);
 }</code></pre></details>
     </li>
     <li class="card">
@@ -120,7 +125,7 @@ kind: vague.top ? &quot;ask&quot; : &quot;ready&quot;,</code></pre></details>
     </li>
     <li class="card">
       <strong>The result: <code>js/app.js</code>, search for <code>function render</code> and <code>function renderAskItem</code></strong>
-      <p><code>render</code> splits the items into the two lists, writes the summary chips (to ask, ready, clarity score) and the progress line. <code>renderAskItem</code> draws the kind label, the client's text with the matched words wrapped in highlight marks (built by <code>highlighted</code>, never with raw HTML), the question and the "Mark as clear" button.</p>
+      <p><code>render</code> splits the items into the two lists, writes the title and chips (to ask, ready, clarity score), the three round steps (<code>renderRound</code>) and the progress line. <code>renderAskItem</code> draws the kind label, the client's text with the matched words wrapped in highlight marks (built by <code>highlighted</code>, never with raw HTML), the question and the "Mark as clear" button.</p>
     </li>
   </ol>
 
@@ -129,10 +134,12 @@ kind: vague.top ? &quot;ask&quot; : &quot;ready&quot;,</code></pre></details>
     <li><strong>Add a vague phrase</strong> (for example a new Hinglish word): add it to the right group inside <code>KINDS</code> in <code>js/phrases.js</code>, then add a line to a test in <code>tests/decoder.test.js</code> and run <code>node --test</code>.</li>
     <li><strong>Change a question's wording:</strong> edit the <code>en</code> or <code>hi</code> template of that group in <code>KINDS</code>. <code>{phrase}</code> is replaced with the client's words.</li>
     <li><strong>Change "big but subtle" style detection:</strong> the <code>loud</code> and <code>quiet</code> word lists in <code>CONTRADICTION</code> in <code>js/phrases.js</code>.</li>
-    <li><strong>Change the copied message greeting or thanks:</strong> <code>MESSAGE</code> in <code>js/phrases.js</code>; the message itself is assembled by <code>buildMessage</code> in <code>js/decoder.js</code>.</li>
-    <li><strong>Change the samples:</strong> <code>SAMPLES</code> in <code>js/phrases.js</code>. Some tests count the sample points, so update them too.</li>
+    <li><strong>Change the questions message greeting or thanks:</strong> <code>MESSAGE</code> in <code>js/phrases.js</code>; the message itself is assembled by <code>buildMessage</code> in <code>js/decoder.js</code>.</li>
+    <li><strong>Change the report's wording:</strong> <code>REPORT</code> in <code>js/phrases.js</code>. The message is written by <code>buildReport</code> in <code>js/decoder.js</code>; the PDF layout is <code>buildReportDoc</code> in <code>js/app.js</code> plus the <code>.doc</code> styles and the print rules in <code>styles.css</code>.</li>
+    <li><strong>Change how screenshots are cleaned</strong> (which bubbles are kept, how times are removed): <code>chatFromScreenshot</code> and <code>TIME_AT_END</code> in <code>js/decoder.js</code>. The tests use real recognised lines saved in <code>tests/fixtures/</code>.</li>
+    <li><strong>Change the samples:</strong> <code>SAMPLES</code> in <code>js/phrases.js</code>, and <code>samples/whatsapp-chat.png</code> for the screenshot sample. Some tests count the sample points, so update them too.</li>
     <li><strong>Change colors or fonts:</strong> the variables at the top of <code>styles.css</code>.</li>
-    <li><strong>Change what a click does</strong> (tick, move, copy, new feedback): <code>handleListAction</code>, <code>copyQuestions</code> and <code>startOver</code> in <code>js/app.js</code>.</li>
+    <li><strong>Change what a click does</strong> (tick, move, send, report, new feedback): <code>handleListAction</code>, <code>openSendSheet</code>, <code>openReportSheet</code> and <code>startOver</code> in <code>js/app.js</code>.</li>
   </ul>
 
   <h2>A practice to reuse</h2>
