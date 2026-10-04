@@ -62,7 +62,7 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored: shared with the final review session, because the learner asked to review only the finished app
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Final kick-the-tires exploration and feedback completed: the learner explored a private live copy and asked for separate screens, the client report and screenshot input, then reviewed the result
 
 ## Final Review
 
@@ -70,9 +70,9 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 - [x] UX and logic audit requested by the learner: list headings ending in a colon and sign-offs are no longer turned into tasks; "feel a bit off", "not loving", "friendly" and "premium but approachable" style feedback is now caught; "white space" is tagged Layout; the "How much?" label is now "Amount"; every label explains itself on hover.
 - [x] Learner asked that the coding tool not be named in the project: README now says "an AI coding agent", agent-specific install folders are no longer tracked, and new commits use the learner's GitHub identity.
 - [x] Improvement round the learner asked for before shipping: a clarity score in the summary (share of points ready to act on, updates when items move), more English vague phrases that judges are likely to type ("polished", "sleek", "not quite there", "surprise me", "more compelling", "on-brand", "a touch"), and praise lines like "Overall solid start" are ignored. Clear bug reports ("the form isn't working") stay in Ready to do.
-- [ ] Separate screens and pop-ups (learner, after reviewing the live copy): a paste screen and a round screen with three steps (Ask the client, Do the work, Report back), tabs for the two lists on phones, and a Send questions sheet with Copy and Open in WhatsApp. Built and checked in a headless browser on laptop and phone sizes; waiting for the learner to try it.
-- [ ] Report back to the client (learner): client, project and your name; Done, In progress and Waiting on your answer with totals; a PDF with a review box per finished change (through the print dialog) and the same report as a WhatsApp message. Built, with decoder tests and browser checks; waiting for the learner to try it.
-- [ ] WhatsApp screenshots as input (learner): Add screenshots, paste or drop an image, and a Screenshot sample; read on the device with Tesseract.js, which loads only when used; text goes into the box for checking; the client's name comes from the chat header. Tested on light and dark test screenshots; waiting for the learner to try it with a real chat.
+- [x] Separate screens and pop-ups (learner, after reviewing the live copy): a paste screen and a round screen with three steps (Ask the client, Do the work, Report back), tabs for the two lists on phones, and a Send questions sheet with Copy and Open in WhatsApp. Built and checked in a headless browser on laptop and phone sizes; the learner reviewed it and confirmed ("perfect, this is what I wanted").
+- [x] Report back to the client (learner): client, project and your name; Done, In progress and Waiting on your answer with totals; a PDF with a review box per finished change (through the print dialog) and the same report as a WhatsApp message. Built, with decoder tests and browser checks; the learner reviewed it and confirmed ("perfect, this is what I wanted").
+- [x] WhatsApp screenshots as input (learner): Add screenshots, paste or drop an image, and a Screenshot sample; read on the device with Tesseract.js, which loads only when used; text goes into the box for checking; the client's name comes from the chat header. Tested on light and dark test screenshots; the learner reviewed it and confirmed. A check with a real client chat on the live link is still to do.
 - [ ] Final review complete: feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
