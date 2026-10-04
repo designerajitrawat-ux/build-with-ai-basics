@@ -2,7 +2,7 @@
 
 **Paste your client's messy feedback. Get a clear to-do list, plus the exact questions to ask about the vague bits.**
 
-![Make It Pop decoding a Hinglish WhatsApp message: vague words are highlighted and turned into questions, clear requests become a checklist](docs/screenshot.png)
+![Make It Pop decoding a Hinglish WhatsApp message: vague words are highlighted and turned into clarifying questions (shown here in English), clear requests become a checklist](docs/screenshot.png)
 
 ## The problem
 
@@ -16,7 +16,7 @@ Some of that is a clear task. Some of it ("thoda", "premium", "kuch alag", "make
 
 1. **Paste** the client's message (WhatsApp chat exports, email, anything; English or Hinglish).
 2. **Decode** splits it into separate points, drops greetings and thanks, and sorts every point into:
-   - **Ask the client:** vague points, with the vague words highlighted, a label for the kind of vagueness (Mood and style, Mixed signals, How much?, Unclear reference and more) and one clarifying question that quotes the client's own words, in the client's language.
+   - **Ask the client:** vague points, with the vague words highlighted, a label for the kind of vagueness (Mood and style, Mixed signals, Amount, Unclear reference and more) and one clarifying question that quotes the client's own words. Questions appear in the client's language, or switch every question to English (Hinglish words get a short English meaning, like "kuch alag" (something different)).
    - **Ready to do:** clear requests as a checklist with small tags (Text, Color, Image, Layout).
 3. **Copy questions** puts one ready-to-send message on your clipboard: greeting, numbered questions, thanks.
 4. **Tick tasks off** as you work, and move any point between the lists with one tap if the app guessed wrong.
@@ -45,7 +45,7 @@ Requires Node.js 20 or newer. No packages to install.
 
 ## How it was built
 
-Built for Devpost's **Build With AI: Basics** hackathon with the Devpost Learn skill pack and an AI coding agent, planning first and building after. The planning documents are in [`devpost/`](devpost/): [scope](devpost/scope.md), [product requirements](devpost/prd.md), [technical spec](devpost/spec.md) and the [build checklist](devpost/checklist.md).
+Built by [designerajitrawat-ux](https://github.com/designerajitrawat-ux) for Devpost's **Build With AI: Basics** hackathon, using the Devpost Learn skill pack with an AI coding agent: planning first, building after. The planning documents are in [`devpost/`](devpost/): [scope](devpost/scope.md), [product requirements](devpost/prd.md), [technical spec](devpost/spec.md) and the [build checklist](devpost/checklist.md).
 
 Fonts: [Fraunces](https://fonts.google.com/specimen/Fraunces) and [DM Sans](https://fonts.google.com/specimen/DM+Sans) from Google Fonts (SIL Open Font License).
 

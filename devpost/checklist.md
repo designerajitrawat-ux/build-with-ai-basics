@@ -61,11 +61,14 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored: shared with the final review session, because the learner asked to review only the finished app
+- [x] Early usable behavior explored: shared with the final review session, because the learner asked to review only the finished app
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
+- [x] English switch for questions: the learner noted that judges may not read Hinglish and the hackathon is global, so every question (and the copied message) can be shown in English, with short meanings next to Hinglish words.
+- [x] UX and logic audit requested by the learner: list headings ending in a colon and sign-offs are no longer turned into tasks; "feel a bit off", "not loving", "friendly" and "premium but approachable" style feedback is now caught; "white space" is tagged Layout; the "How much?" label is now "Amount"; every label explains itself on hover.
+- [x] Learner asked that the coding tool not be named in the project: README now says "an AI coding agent", agent-specific install folders are no longer tracked, and new commits use the learner's GitHub identity.
 - [ ] Final review complete: feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

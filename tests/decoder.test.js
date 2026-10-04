@@ -130,3 +130,43 @@ test("builds a Hinglish message when most questions are Hinglish, and nothing wh
   assert.ok(D.buildMessage(ask).startsWith(P.MESSAGE.hi.open));
   assert.equal(D.buildMessage([]), "");
 });
+
+test("drops list headings ending in a colon and sign-offs, but keeps requests that start with thanks", () => {
+  assert.deepEqual(D.splitPoints("Hey! A few thoughts on v2:\nMove the pricing table above the FAQ\nLet me know when it is ready. Cheers, Sam"),
+    ["Move the pricing table above the FAQ"]);
+  assert.deepEqual(D.splitPoints("Thanks, please change the logo to the dark version"),
+    ["Thanks, please change the logo to the dark version"]);
+});
+
+test("catches common English vague feedback", () => {
+  const kind = (text) => D.decode(text)[0].category;
+  assert.equal(kind("The colors feel a bit off"), "Gut feeling");
+  assert.equal(kind("Not loving the icons, can we try something else?"), "Gut feeling");
+  assert.equal(kind("Can it feel more friendly?"), "Mood and style");
+  assert.equal(kind("Can you make it feel more premium but still approachable?"), "Mixed signals");
+  assert.equal(kind("Tone it down a little"), "Amount");
+});
+
+test("'white space' is a layout task, not a color task", () => {
+  assert.equal(D.decode("Add more white space around the cards")[0].tag, "Layout");
+});
+
+test("every question exists in English too, and English mode makes the whole message English", () => {
+  const ask = D.decode(P.SAMPLES.hi).filter((i) => i.kind === "ask");
+  ask.forEach((item) => {
+    assert.equal(D.questionFor(item, "client"), item.questions.hi);
+    assert.equal(D.questionFor(item, "en"), item.questions.en);
+  });
+  const message = D.buildMessage(ask, "en");
+  assert.ok(message.startsWith(P.MESSAGE.en.open));
+  assert.ok(message.includes("When you say \"premium\"") === false && message.includes("For \"premium\""));
+});
+
+test("English questions explain Hinglish words for readers who don't speak Hindi", () => {
+  const [item] = D.decode("Banner me kuch alag try karo");
+  assert.match(item.questions.en, /^"kuch alag" \(something different\) from what\?/);
+  const [mixed] = D.decode("logo bada karo but subtle");
+  assert.match(mixed.questions.en, /^"bada" \(big\) and "subtle" can pull/);
+  const [ref] = D.decode("Jaisa humne call pe discuss kiya tha waisa footer bana do");
+  assert.match(ref.questions.en, /\(as we discussed\)/);
+});

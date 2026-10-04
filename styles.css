@@ -446,3 +446,33 @@ textarea:focus-visible { outline: none; border-color: var(--tomato); box-shadow:
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Question language switch */
+.lang-switch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.lang-switch-label { padding: 0 6px 0 10px; font-size: 0.85rem; color: var(--muted); }
+
+.seg {
+  font: 500 0.85rem/1 var(--sans);
+  padding: 7px 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.seg.is-active { background: var(--ink); color: #fff; }
+.kind-label[title] { cursor: help; }

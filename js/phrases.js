@@ -11,7 +11,8 @@
     greeting: /^(hi+|hello+|hey+|helo|hii+|dear\s+\w+|good\s+(morning|afternoon|evening)|namaste|namaskar)\b/i,
     whole: /^(thanks?( (you|so much|a lot|again|bro|bhai|sir|ji))*|thank you( so much| again)?|thx|ty|dhanyavaad|shukriya|ok+a*y*|k|done|sure|great|cool|got it|noted|haan( ji)?|ha|ji|hmm+|regards|best regards|warm regards|best|cheers|thanks (and|&) regards|<media omitted>|this message was deleted|you deleted this message)$/i,
     praise: /\b(nice work|good work|great work|well done|good job|great job|looks good|looks great|looks nice|accha hai|achha hai|badhiya|mast hai|sahi hai|good effort)\b/i,
-    header: /^(here('s| is| are)? (my|the|some) (feedback|changes|comments|points)|feedback|changes|comments|few (points|changes)|some (points|changes)|kuch changes)\b.{0,30}:$/i
+    header: /^(here('s| is| are)? (my|the|some) (feedback|changes|comments|points)|feedback|changes|comments|few (points|changes)|some (points|changes)|kuch changes)\b.{0,30}:$/i,
+    signoff: /^(let me know|lmk|talk soon|thanks in advance|looking forward|sent from my|(regards|best regards|kind regards|warm regards|best|cheers|thanks|thank you|thanks again|ty)[,!. ]+[\p{L} .]{1,30}$)/iu
   };
 
   // Words that show a line is asking for something (used to keep requests that start with a greeting or praise).
@@ -32,6 +33,7 @@
   var KINDS = [
     {
       id: "reference", label: "Unclear reference", priority: 1,
+      hint: "Points to something you can't see from here.",
       groups: [{
         phrases: [
           "like we discussed", "as discussed", "as we discussed", "like i said", "as i said", "like before",
@@ -47,6 +49,7 @@
     },
     {
       id: "undecided", label: "Undecided", priority: 2,
+      hint: "The client hasn't decided yet.",
       groups: [{
         phrases: [
           "maybe", "may be", "not sure", "shayad", "dekh lo", "dekh lena", "dekh lijiye", "try karke dekho",
@@ -60,6 +63,7 @@
     },
     {
       id: "mood", label: "Mood and style", priority: 3,
+      hint: "Describes a feeling, not a change you can make.",
       groups: [
         {
           phrases: [
@@ -82,7 +86,8 @@
         {
           phrases: [
             "modern", "fresh", "trendy", "youthful", "stylish", "re:cool(?!\\s+(?:tones?|colou?rs?))", "funky",
-            "edgy", "sexy", "contemporary", "latest style", "new age", "gen z"
+            "edgy", "sexy", "contemporary", "latest style", "new age", "gen z", "more friendly", "friendly", "welcoming",
+            "approachable", "playful", "inviting", "warm feel", "fun"
           ],
           en: "\"{phrase}\" can mean many things. Could you share one or two websites or posts whose style you'd call \"{phrase}\"?",
           hi: "\"{phrase}\" ke kai matlab ho sakte hain. Koi 1-2 website ya post bhej sakte ho jiska style aapko \"{phrase}\" lagta hai?"
@@ -117,6 +122,7 @@
     },
     {
       id: "color", label: "Color", priority: 4,
+      hint: "Names a color feeling, not an exact color.",
       groups: [{
         phrases: [
           "vibrant", "more colorful", "colorful", "colourful", "bright colors", "bright colours", "brighter",
@@ -132,6 +138,7 @@
     },
     {
       id: "layout", label: "Layout and space", priority: 5,
+      hint: "Names a problem without saying where.",
       groups: [{
         phrases: [
           "busy", "cluttered", "crowded", "messy", "too much", "empty", "khaali khaali", "khali khali", "khaali",
@@ -145,6 +152,7 @@
     },
     {
       id: "text", label: "Text", priority: 6,
+      hint: "Asks for better words without saying which.",
       groups: [{
         phrases: [
           "catchy", "punchy", "better copy", "better text", "better wording", "better headline", "strong headline",
@@ -158,6 +166,7 @@
     },
     {
       id: "gut", label: "Gut feeling", priority: 7,
+      hint: "Something feels wrong, but not what.",
       groups: [{
         phrases: [
           "not feeling it", "not feeling", "something is missing", "something's missing", "something missing",
@@ -166,14 +175,16 @@
           "does not work for me", "not working for me", "i don't like it", "i dont like it", "don't like it",
           "dont like it", "pasand nahi aaya", "pasand nhi aaya", "accha nahi lag raha", "achha nahi lag raha",
           "acha nahi lag raha", "theek nahi lag raha", "sahi nahi lag raha", "looks off", "feels off",
-          "kuch ajeeb", "ajeeb lag raha", "not happy with"
+          "kuch ajeeb", "ajeeb lag raha", "not happy with", "not loving", "not a fan", "don't love", "dont love",
+          "re:(?:feels?|looks?|seems?)\\s+(?:a\\s+(?:bit|little)\\s+|kind\\s+of\\s+|slightly\\s+|kinda\\s+)off"
         ],
         en: "You mentioned \"{phrase}\". What feels off most: the colors, the layout, the images, or the text? Even one word helps me fix the right thing.",
         hi: "Aapne kaha \"{phrase}\". Sabse zyada kya khatak raha hai: colors, layout, images ya text? Bas ek shabd bhi bata do to main sahi cheez theek karunga."
       }]
     },
     {
-      id: "amount", label: "How much?", priority: 8,
+      id: "amount", label: "Amount", priority: 8,
+      hint: "Says how much without a number.",
       groups: [{
         phrases: [
           "a little bit", "a little", "a bit", "a tad", "slightly", "somewhat", "kind of", "sort of", "kinda",
@@ -189,22 +200,64 @@
   // Mixed signals: a "loud" wish and a "quiet" wish joined by "but", "lekin" and similar.
   var CONTRADICTION = {
     label: "Mixed signals",
+    hint: "Asks for two things that pull against each other.",
     priority: 0,
     loud: ["big", "bigger", "bada", "badi", "bade", "large", "larger", "bold", "bolder", "loud", "bright", "brighter",
       "colorful", "colourful", "vibrant", "flashy", "eye-catching", "catchy", "premium", "rich", "luxury", "grand",
       "standout", "attractive", "prominent"],
     quiet: ["subtle", "simple", "minimal", "minimalist", "clean", "light", "soft", "sober", "decent", "small",
-      "smaller", "chhota", "chhoti", "understated", "elegant", "plain"],
+      "smaller", "chhota", "chhoti", "understated", "elegant", "plain", "approachable", "friendly", "casual"],
     joiners: ["but", "lekin", "par", "magar", "yet", "while", "phir bhi"],
     en: "\"{a}\" and \"{b}\" can pull in opposite directions. Which one matters more here? An example that gets both right would help a lot.",
     hi: "\"{a}\" aur \"{b}\" thode ulte ho sakte hain. Yahan kaunsa zyada zaroori hai? Koi example jisme dono sahi lage, bhej denge to bahut help hogi."
   };
+
+  // Short English meanings for Hinglish vague phrases, added when questions are shown in English.
+  var GLOSS = {
+    "thoda": "a little", "thodi": "a little", "thode": "a little", "thoda sa": "just a little", "zara": "a bit",
+    "zara sa": "just a bit", "halka sa": "slightly", "thoda better": "a bit better",
+    "kuch alag": "something different", "kuch naya": "something new", "kuch hatke": "something offbeat",
+    "hatke": "offbeat", "sundar": "beautiful", "mast": "great", "jhakaas": "awesome", "zabardast": "fantastic",
+    "dhamakedar": "explosive", "accha banao": "make it nice", "achha banao": "make it nice", "acha banao": "make it nice",
+    "accha karo": "make it nice", "jaan daalo": "bring it to life", "jaan dalo": "bring it to life",
+    "jaan daal do": "bring it to life", "sada": "plain", "saada": "plain", "feeka": "dull", "pheeka": "dull",
+    "bekar": "bad", "purana": "old-fashioned", "khaali": "empty", "khali": "empty", "khaali khaali": "empty",
+    "khali khali": "empty", "rangeen": "colorful", "brand ke colors": "the brand's colors",
+    "kuch aur color": "some other color", "koi aur color": "some other color", "accha color": "a nice color",
+    "sahi jagah": "the right place", "adjust karo": "adjust it", "adjust kar do": "adjust it",
+    "content theek": "fix the content", "text theek": "fix the text", "wording theek": "fix the wording",
+    "content accha": "better content", "text accha": "better text", "accha font": "a nice font", "font accha": "a nice font",
+    "font stylish": "a stylish font", "jam nahi raha": "it isn't working", "jam nhi raha": "it isn't working",
+    "jach nahi raha": "it doesn't suit", "jach nhi raha": "it doesn't suit", "kuch missing": "something's missing",
+    "kuch kami": "something's lacking", "kami lag rahi": "something feels lacking",
+    "maza nahi aa raha": "it isn't enjoyable", "maza nhi aa raha": "it isn't enjoyable", "maza nahi aaya": "didn't enjoy it",
+    "pasand nahi aaya": "didn't like it", "pasand nhi aaya": "didn't like it", "accha nahi lag raha": "doesn't look good",
+    "achha nahi lag raha": "doesn't look good", "acha nahi lag raha": "doesn't look good",
+    "theek nahi lag raha": "doesn't look right", "sahi nahi lag raha": "doesn't look right", "kuch ajeeb": "something odd",
+    "ajeeb lag raha": "looks odd", "pehle jaisa": "like before", "pehle jaisi": "like before", "pehle wala": "the earlier one",
+    "jaisa bola tha": "as I said", "jaisa bataya tha": "as I explained", "kuch aisa": "something like this",
+    "kuch waisa": "something like that", "usi tarah": "the same way", "reference jaisa": "like the reference",
+    "shayad": "maybe", "dekh lo": "have a look", "dekh lena": "have a look", "dekh lijiye": "have a look",
+    "try karke dekho": "try and see", "try kar ke dekho": "try and see", "jo theek lage": "whatever seems right",
+    "jo sahi lage": "whatever seems right", "jo accha lage": "whatever looks good", "ya kuch aur": "or something else",
+    "possible ho to": "if possible", "agar ho sake": "if possible", "bada": "big", "badi": "big", "bade": "big",
+    "chhota": "small", "chhoti": "small"
+  };
+  // Glosses for phrases matched by a pattern rather than fixed words.
+  var GLOSS_PATTERNS = [
+    { re: /^jaisa\b.*\b(discuss|baat)\b/i, gloss: "as we discussed" }
+  ];
 
   // Words that show a point is written in Hinglish (Roman-script Hindi mixed with English).
   var HINGLISH_MARKERS = ["karo", "kar", "kardo", "karna", "kariye", "kijiye", "karein", "chahiye", "nahi", "nhi",
     "hai", "hain", "thoda", "thodi", "thode", "zara", "kuch", "jaisa", "jaise", "waisa", "accha", "achha", "acha",
     "bhi", "aur", "lag", "lagna", "raha", "rahi", "rahe", "wala", "wali", "wale", "ka", "ki", "ke", "ko", "se",
     "mein", "abhi", "humne", "aap", "bada", "badi", "chhota", "banao", "bana", "bilkul", "ekdum", "poora", "pura"];
+
+  // Phrases that settle a tag before the single words below ("white space" is layout, not color).
+  var TAG_PHRASES = [
+    { tag: "Layout", phrases: ["white space", "whitespace", "line spacing", "line height", "letter spacing"] }
+  ];
 
   // Keywords that guess a small tag for clear tasks. Checked in this order.
   var TAGS = [
@@ -229,6 +282,7 @@
   // Question used when the designer moves a point to "Ask the client" themselves.
   var GENERIC = {
     label: "Your pick",
+    hint: "You chose to ask about this one.",
     en: "Could you tell me more about what you'd like here? An example would help.",
     hi: "Yahan aap exactly kya chahte ho, thoda detail mein bata sakte ho? Koi example ho to aur accha."
   };
@@ -271,6 +325,9 @@
     CONTRADICTION: CONTRADICTION,
     HINGLISH_MARKERS: HINGLISH_MARKERS,
     TAGS: TAGS,
+    TAG_PHRASES: TAG_PHRASES,
+    GLOSS: GLOSS,
+    GLOSS_PATTERNS: GLOSS_PATTERNS,
     MESSAGE: MESSAGE,
     GENERIC: GENERIC,
     SAMPLES: SAMPLES

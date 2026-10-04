@@ -17,7 +17,8 @@
   var askList = $("ask-list");
   var readyList = $("ready-list");
 
-  var state = { items: [] };
+  // langMode "client" shows each question in the client's language; "en" shows every question in English.
+  var state = { items: [], langMode: "client" };
 
   function syncDecodeButton() {
     decodeBtn.disabled = feedback.value.trim() === "";
@@ -58,7 +59,9 @@
     var li = el("li", "item ask-item");
     li.setAttribute("data-id", item.id);
     var top = el("div", "item-top");
-    top.appendChild(el("span", "kind-label", item.category));
+    var label = el("span", "kind-label", item.category);
+    if (item.hint) label.title = item.hint;
+    top.appendChild(label);
     top.appendChild(actionButton("Mark as clear", "to-ready", item));
     li.appendChild(top);
     var quote = el("p", "quote");
@@ -66,7 +69,7 @@
     li.appendChild(quote);
     var question = el("p", "question");
     question.appendChild(el("span", "question-label", "Ask: "));
-    question.appendChild(document.createTextNode(item.question));
+    question.appendChild(document.createTextNode(Decoder.questionFor(item, state.langMode)));
     li.appendChild(question);
     return li;
   }
@@ -127,6 +130,13 @@
     $("ready-count").textContent = ready.length;
     $("ask-empty").hidden = ask.length > 0;
     $("copy-questions").disabled = ask.length === 0;
+    var anyHinglish = ask.some(function (i) { return i.lang === "hi"; });
+    $("lang-switch").hidden = !anyHinglish;
+    document.querySelectorAll("[data-lang-mode]").forEach(function (button) {
+      var on = button.getAttribute("data-lang-mode") === state.langMode;
+      button.classList.toggle("is-active", on);
+      button.setAttribute("aria-pressed", on ? "true" : "false");
+    });
     $("ready-empty").hidden = ready.length > 0;
     renderProgress(ready);
   }
@@ -149,9 +159,11 @@
       item.done = false;
     } else if (action === "to-ask") {
       item.kind = "ask";
-      if (!item.question) {
+      if (!item.questions) {
         item.category = Phrases.GENERIC.label;
-        item.question = Phrases.GENERIC[item.lang];
+        item.hint = Phrases.GENERIC.hint;
+        item.questions = { en: Phrases.GENERIC.en, hi: Phrases.GENERIC.hi };
+        item.question = item.questions[item.lang];
       }
     }
     render();
@@ -161,6 +173,7 @@
 
   function startOver() {
     state.items = [];
+    state.langMode = "client";
     feedback.value = "";
     results.hidden = true;
     syncDecodeButton();
@@ -203,7 +216,7 @@
 
   function copyQuestions() {
     var ask = state.items.filter(function (i) { return i.kind === "ask"; });
-    var message = Decoder.buildMessage(ask);
+    var message = Decoder.buildMessage(ask, state.langMode);
     if (!message) return;
     var done = function () { showToast("Copied. Paste it in WhatsApp."); };
     var fallback = function () { if (legacyCopy(message)) done(); else openCopyDialog(message); };
@@ -239,5 +252,11 @@
   $("copy-questions").addEventListener("click", copyQuestions);
   $("new-feedback").addEventListener("click", startOver);
   lists.addEventListener("click", handleListAction);
+  document.querySelectorAll("[data-lang-mode]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      state.langMode = button.getAttribute("data-lang-mode");
+      render();
+    });
+  });
   syncDecodeButton();
 })();

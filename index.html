@@ -55,6 +55,11 @@
             </div>
             <button type="button" id="copy-questions" class="btn btn-primary btn-small">Copy questions</button>
           </header>
+          <div id="lang-switch" class="lang-switch" role="group" aria-label="Question language" hidden>
+            <span class="lang-switch-label">Questions in</span>
+            <button type="button" class="seg is-active" data-lang-mode="client" aria-pressed="true">Client's language</button>
+            <button type="button" class="seg" data-lang-mode="en" aria-pressed="false">English</button>
+          </div>
           <ol id="ask-list" class="items"></ol>
           <p id="ask-empty" class="empty" hidden>Nothing vague here. Your client was clear this time.</p>
         </section>

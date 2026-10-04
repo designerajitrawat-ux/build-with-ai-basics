@@ -57,7 +57,7 @@ Carried from `prd.md > Look and Feel`.
 ## Components
 
 ### Phrase Library
-File: `js/phrases.js`. A list of kinds; each kind has a name and label ("Mood and style"), a priority, a list of phrase patterns, and question templates in English and Hinglish that contain a `{phrase}` slot. Also holds the Hinglish marker words, the chit-chat words to drop, the task tag keywords, and the two sample messages.
+File: `js/phrases.js`. A list of kinds; each kind has a name and label ("Mood and style"), a priority, a list of phrase patterns, and question templates in English and Hinglish that contain a `{phrase}` slot. Also holds an explanation for each kind (shown on its label), short English meanings for Hinglish phrases, the Hinglish marker words, the chit-chat and sign-off patterns to drop, the task tag keywords and phrases, and the two sample messages.
 PRD ref: `prd.md > Vague Phrase Detection`, `prd.md > Clarifying Questions`, `prd.md > Feedback Input`.
 
 ### Decoder
@@ -66,10 +66,11 @@ File: `js/decoder.js`. Pure functions, no page access, so they can be tested in 
 - `splitPoints(text)` cuts into points and drops chit-chat.
 - `findVague(point)` returns matched phrases with positions and kinds, including contradictions.
 - `detectLanguage(point)` returns `en` or `hi` (Hinglish) from marker words.
-- `buildQuestion(point, matches, lang)` fills the template of the highest-priority kind.
+- `buildQuestion(top, lang)` fills the template of the highest-priority kind; every Ask item gets the question in both English and Hinglish, and English questions add a short meaning after Hinglish words.
+- `questionFor(item, mode)` returns the question in the client's language or, in English mode, always in English.
 - `tagTask(point)` returns Text, Color, Image, Layout or Other.
 - `decode(raw)` runs everything and returns items `{ id, text, kind: "ask" | "ready", matches, category, question, lang, tag, done }`.
-- `buildMessage(askItems)` returns the WhatsApp-ready text.
+- `buildMessage(askItems, mode)` returns the WhatsApp-ready text, all in English when mode is English.
 PRD ref: `prd.md > Splitting Feedback into Points`, `prd.md > Vague Phrase Detection`, `prd.md > Clarifying Questions`, `prd.md > Copy Questions Message`.
 
 ### Page Logic

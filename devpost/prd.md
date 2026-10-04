@@ -59,7 +59,7 @@ Develops `scope.md > The POC Boundary` (text input only).
 ### Splitting Feedback into Points
 - One point per line, bullet or numbered item, and per sentence inside a line.
 - Long sentences joined by "also", "aur", "plus", "and also" or ";" are split when both sides are real requests (at least three words each), so "black and white" or "black aur white" stays whole.
-- Greetings, thanks and chit-chat ("hi", "hello sir", "thanks", "ok", "regards", a lone emoji) are dropped.
+- Greetings, thanks and chit-chat ("hi", "hello sir", "thanks", "ok", "regards", a lone emoji) are dropped, along with short list headings ending in a colon ("A few thoughts on v2:") and sign-offs ("Let me know when it's ready", "Cheers, Sam").
 
 - [ ] The English sample becomes the expected number of points, with no greeting or thank-you among them.
 - [ ] "logo bada karo aur header ka color change karo" becomes two points.
@@ -78,9 +78,12 @@ The unique kernel: `scope.md > The Unique Kernel`.
 ### Clarifying Questions
 - Each vague point gets one question built from its kind, quoting the client's own words, for example: When you say "pop", what should change most: brighter colors, a bigger headline, or more contrast? A link to a design you like would help.
 - If the point is in Hinglish, the question is in Hinglish (Roman script).
+- When any Ask item is in Hinglish, a switch above the list, **Questions in: Client's language / English**, shows every question in English instead. In English, Hinglish words get a short meaning, for example "kuch alag" (something different), so readers who don't speak Hindi can follow. Copy questions uses the same choice.
+- Each kind label explains itself on hover (for example, Amount: "Says how much without a number.").
 - When several phrases match, the most specific kind decides the question (contradiction first, then the others).
 
 - [ ] Every point in Ask the client shows exactly one question that contains the client's words.
+- [ ] Switching to English turns every question and the copied message into English, with meanings next to Hinglish words.
 - [ ] Hinglish points get Hinglish questions; English points get English questions.
 
 ### Copy Questions Message
@@ -127,6 +130,7 @@ Answers the "what if the app is wrong" question raised in `3-prd`.
   - Ask the client shown before Ready to do, because questions should go out before work starts.
   - One-tap moving between lists, so a wrong guess never blocks the designer.
   - Questions in the client's language, because replying in Hinglish to a Hinglish client feels natural.
+- **English switch (learner, at final review):** the learner pointed out that judges may not read Hinglish and the hackathon is global (all submission materials must be in English), so every question can also be shown in English, with meanings for Hinglish words.
 
 ## What We're Building
 Everything under **Features and Behavior** and **States and Boundaries**, on a single page that runs in the browser, with an English and a Hinglish sample.

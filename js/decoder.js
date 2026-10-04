@@ -36,6 +36,9 @@
     if (P.CHITCHAT.whole.test(bare)) return true;
     if (P.CHITCHAT.header.test(text.trim())) return true;
     var asks = P.REQUEST_WORDS.test(bare);
+    // A short line ending in a colon ("A few thoughts on v2:") introduces the list; it is not a task.
+    if (/:\s*$/.test(text) && wordCount(text) <= 8 && !asks) return true;
+    if (P.CHITCHAT.signoff.test(bare) && !asks) return true;
     if (P.CHITCHAT.greeting.test(bare) && !asks) return true;
     if (P.CHITCHAT.praise.test(bare) && !asks) return true;
     return false;
@@ -129,7 +132,7 @@
       while ((m = entry.re.exec(text)) !== null) {
         found.push({
           phrase: m[0], start: m.index, end: m.index + m[0].length,
-          kindId: entry.kind.id, label: entry.kind.label, priority: entry.kind.priority, group: entry.group
+          kindId: entry.kind.id, label: entry.kind.label, hint: entry.kind.hint, priority: entry.kind.priority, group: entry.group
         });
         if (m[0].length === 0) entry.re.lastIndex++;
       }
@@ -143,11 +146,11 @@
       if (a && b && a !== b) {
         found.push({
           phrase: c[1], start: c.indices[1][0], end: c.indices[1][1], pair: [c[1], c[2]],
-          kindId: "contradiction", label: C.label, priority: C.priority
+          kindId: "contradiction", label: C.label, hint: C.hint, priority: C.priority
         });
         found.push({
           phrase: c[2], start: c.indices[2][0], end: c.indices[2][1],
-          kindId: "contradiction", label: C.label, priority: C.priority
+          kindId: "contradiction", label: C.label, hint: C.hint, priority: C.priority
         });
       }
       CONTRADICTION_RE.lastIndex = c.indices[2][0];
@@ -193,17 +196,42 @@
     return phrase;
   }
 
+  // English meaning of a Hinglish phrase, if the library knows one.
+  function glossFor(phrase) {
+    var key = phrase.toLowerCase().replace(/\s+/g, " ");
+    if (P.GLOSS[key]) return P.GLOSS[key];
+    for (var i = 0; i < P.GLOSS_PATTERNS.length; i++) {
+      if (P.GLOSS_PATTERNS[i].re.test(key)) return P.GLOSS_PATTERNS[i].gloss;
+    }
+    return null;
+  }
+
+  // Puts the client's words into a template slot. In English, the first quote of a Hinglish
+  // phrase also gets its meaning: "kuch alag" (something different).
+  function fillSlot(template, slot, words, lang) {
+    var gloss = lang === "en" ? glossFor(words) : null;
+    var quoted = "\"" + slot + "\"";
+    if (gloss && template.indexOf(quoted) !== -1) {
+      template = template.replace(quoted, "\"" + words + "\" (" + gloss + ")");
+    }
+    return template.split(slot).join(words);
+  }
+
   function buildQuestion(top, lang) {
     if (top.kindId === "contradiction") {
-      var a = { phrase: top.pair[0], start: 1 };
-      var b = { phrase: top.pair[1], start: 1 };
-      return C[lang].replace("{a}", quoteWords(a)).replace("{b}", quoteWords(b));
+      var a = quoteWords({ phrase: top.pair[0], start: 1 });
+      var b = quoteWords({ phrase: top.pair[1], start: 1 });
+      return fillSlot(fillSlot(C[lang], "{a}", a, lang), "{b}", b, lang);
     }
-    return top.group[lang].split("{phrase}").join(quoteWords(top));
+    return fillSlot(top.group[lang], "{phrase}", quoteWords(top), lang);
   }
 
   function tagTask(text) {
-    var words = text.toLowerCase().match(/[\p{L}]+/gu) || [];
+    var lower = text.toLowerCase();
+    for (var t = 0; t < P.TAG_PHRASES.length; t++) {
+      if (P.TAG_PHRASES[t].phrases.some(function (phrase) { return lower.indexOf(phrase) !== -1; })) return P.TAG_PHRASES[t].tag;
+    }
+    var words = lower.match(/[\p{L}]+/gu) || [];
     for (var i = 0; i < P.TAGS.length; i++) {
       var tagWords = P.TAGS[i].words;
       if (words.some(function (w) { return tagWords.indexOf(w) !== -1; })) return P.TAGS[i].tag;
@@ -215,7 +243,9 @@
     return splitPoints(raw).map(function (text, index) {
       var vague = findVague(text);
       var lang = detectLanguage(text);
-      var item = {
+      // Questions are written in both languages so the designer can switch to English at any time.
+      var questions = vague.top ? { en: buildQuestion(vague.top, "en"), hi: buildQuestion(vague.top, "hi") } : null;
+      return {
         id: index + 1,
         text: text,
         lang: lang,
@@ -223,20 +253,31 @@
         matches: vague.highlights,
         kind: vague.top ? "ask" : "ready",
         category: vague.top ? vague.top.label : null,
-        question: vague.top ? buildQuestion(vague.top, lang) : null,
+        hint: vague.top ? vague.top.hint : null,
+        questions: questions,
+        question: questions ? questions[lang] : null,
         done: false
       };
-      return item;
     });
   }
 
-  // One message for WhatsApp: greeting, numbered questions, thanks. Language follows most of the questions.
-  function buildMessage(askItems) {
+  // The question an item shows: in the client's own language, or always in English.
+  function questionFor(item, mode) {
+    if (!item.questions) return item.question;
+    return mode === "en" ? item.questions.en : item.questions[item.lang];
+  }
+
+  // One message for WhatsApp: greeting, numbered questions, thanks.
+  // In "client" mode the greeting follows the language most questions use; in "en" mode everything is English.
+  function buildMessage(askItems, mode) {
     if (!askItems.length) return "";
-    var hinglish = askItems.filter(function (i) { return i.lang === "hi"; }).length;
-    var lang = hinglish > askItems.length - hinglish ? "hi" : "en";
+    var lang = "en";
+    if (mode !== "en") {
+      var hinglish = askItems.filter(function (i) { return i.lang === "hi"; }).length;
+      lang = hinglish > askItems.length - hinglish ? "hi" : "en";
+    }
     var words = P.MESSAGE[lang];
-    var lines = askItems.map(function (item, index) { return (index + 1) + ". " + item.question; });
+    var lines = askItems.map(function (item, index) { return (index + 1) + ". " + questionFor(item, mode); });
     return words.open + "\n\n" + lines.join("\n") + "\n\n" + words.close;
   }
 
@@ -248,6 +289,7 @@
     detectLanguage: detectLanguage,
     tagTask: tagTask,
     buildMessage: buildMessage,
+    questionFor: questionFor,
     decode: decode
   };
 
