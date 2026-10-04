@@ -49,7 +49,7 @@ PRD ref: `prd.md > The Core Journey`.
 - **Run the checks:** `node --test` from the project folder.
 - **Demo recording:** open the page, use a sample, Decode, show the highlights, questions and round steps, send the questions, tick the tasks, open the report (PDF and WhatsApp views), then show a screenshot being read and the Hinglish sample with the English switch.
 - **Submission needs** a short demo video and a public GitHub repository. Deployment is optional; the learner chose GitHub Pages, which can host this folder as-is.
-- **Shared links:** public repository https://github.com/designerajitrawat-ux/build-with-ai-basics and demo video https://www.youtube.com/watch?v=jyMb8r7Mg00 (both checked without signing in).
+- **Shared links:** public repository https://github.com/designerajitrawat-ux/build-with-ai-basics and demo video https://www.youtube.com/watch?v=qGRGaGpegdQ (both checked without signing in; this video replaces the first one, which showed the single-page version).
 
 ## Look and Feel
 Carried from `prd.md > Look and Feel`.
