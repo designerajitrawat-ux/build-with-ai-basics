@@ -49,7 +49,7 @@ PRD ref: `prd.md > The Core Journey`.
 - **Run the checks:** `node --test` from the project folder.
 - **Demo recording:** open the page, use a sample, Decode, show the highlights, questions and round steps, send the questions, tick the tasks, open the report (PDF and WhatsApp views), then show a screenshot being read and the Hinglish sample with the English switch.
 - **Submission needs** a short demo video and a public GitHub repository. Deployment is optional; the learner chose GitHub Pages, which can host this folder as-is.
-- **Shared links:** public repository https://github.com/designerajitrawat-ux/build-with-ai-basics and demo video https://www.youtube.com/watch?v=qGRGaGpegdQ (both checked without signing in; this video replaces the first one, which showed the single-page version).
+- **Shared links:** live app https://designerajitrawat-ux.github.io/build-with-ai-basics/, public repository https://github.com/designerajitrawat-ux/build-with-ai-basics and demo video https://www.youtube.com/watch?v=qGRGaGpegdQ (both checked without signing in; this video replaces the first one, which showed the single-page version).
 
 ## Look and Feel
 Carried from `prd.md > Look and Feel`.
@@ -163,4 +163,4 @@ build-with-ai-basics/
 - **Delegated choices:** the learner asked the agent to make the technical choices and will review the finished app. Stack (plain HTML/CSS/JS), classic scripts, no AI service, Google Fonts and Node's built-in tests are agent recommendations accepted under that delegation.
 - **Final review requests (learner):** separate screens and pop-ups instead of one long page, a report to send back to the client when the work is done, and adding WhatsApp screenshots as well as pasted text. The agent proposed how: the three round steps, tabs on phones, the report as both a WhatsApp message and a PDF through printing, WhatsApp links, and a screenshot reader that loads only when used and puts the text in the box for checking.
 - **Learner uncertainty:** none raised; the learner delegated technical planning. One question the agent expects judges and the learner to ask, "how can it find vague words without AI?", is answered in **How This Works, In Plain Language** and will be shown in the demo.
-- **Hosted link:** the learner chose GitHub Pages and switches it on in the repository settings (the agent's GitHub access cannot change repository settings).
+- **Hosted link:** the learner switched on GitHub Pages (the agent's GitHub access cannot change repository settings). The app is live at https://designerajitrawat-ux.github.io/build-with-ai-basics/ and the full browser checks pass there, including reading a screenshot.
