@@ -82,6 +82,8 @@ test("Hinglish points get Hinglish questions and English points get English ques
   const [hi] = D.decode("Banner me kuch alag try karo");
   assert.equal(hi.lang, "hi");
   assert.match(hi.question, /matlab kis cheez se alag/);
+  // A short line with a single Hinglish marker word is still Hinglish.
+  assert.equal(D.detectLanguage("Menu me \"Contact\" add karo"), "hi");
   const [en] = D.decode("Can you make it pop?");
   assert.equal(en.lang, "en");
   assert.match(en.question, /^When you say "make it pop"/);

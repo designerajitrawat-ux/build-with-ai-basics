@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make It Pop App Map</title>
+<style>
+  :root {
+    --paper: #FBF8F1; --card: #FFFFFF; --ink: #1D1C1A; --muted: #625D55; --line: #E8E1D3;
+    --hl: #FFE066; --tomato: #C8371C; --green: #2E7D4F; --code: #F3EEE4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1B1A18; --card: #252320; --ink: #F3EFE7; --muted: #B5AEA2; --line: #3A3631;
+      --hl: #8A7414; --tomato: #FF8A70; --green: #7CCB9A; --code: #2E2B27;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.2; }
+  h1 { font-size: 2.2rem; margin: 0 0 6px; }
+  h2 { font-size: 1.4rem; margin: 40px 0 10px; }
+  .lead { color: var(--muted); margin: 0 0 8px; }
+  .mark { background: var(--hl); padding: 0 .2em; border-radius: .3em; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 12px 0; }
+  code { font: 0.92em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 5px; }
+  pre { background: var(--code); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font: 0.88rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin: 10px 0 0; }
+  pre code { background: none; padding: 0; }
+  ol.route { padding-left: 0; list-style: none; counter-reset: stop; }
+  ol.route > li { counter-increment: stop; position: relative; padding-left: 48px; }
+  ol.route > li::before { content: counter(stop); position: absolute; left: 0; top: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--tomato); color: #fff; font-weight: 700; display: grid; place-items: center; }
+  .where { color: var(--muted); font-size: 0.95rem; }
+  details { margin-top: 8px; }
+  summary { cursor: pointer; color: var(--tomato); font-weight: 600; }
+  summary:focus-visible, a:focus-visible { outline: 3px solid var(--tomato); outline-offset: 2px; border-radius: 4px; }
+  a { color: var(--tomato); }
+  ul.pointers li { margin: 6px 0; }
+  .scroll { overflow-x: auto; }
+  .diagram { width: 100%; min-width: 620px; height: auto; display: block; }
+  .diagram text { font: 13px system-ui, sans-serif; fill: var(--ink); }
+  .diagram .small { font-size: 11px; fill: var(--muted); }
+  .diagram .box { fill: var(--card); stroke: var(--line); stroke-width: 1.5; }
+  .diagram .hot { fill: var(--hl); stroke: none; }
+  .diagram .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+  .diagram #arrowhead path { fill: var(--muted); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Make it <span class="mark">pop</span>: app map</h1>
+  <p class="lead">A short guide to where things live in this project, so you know where to start when you want to change something.</p>
+
+  <h2>What the app is</h2>
+  <div class="card">
+    <p style="margin-top:0">Make It Pop is one web page that runs fully in the browser. You paste a client's feedback, press Decode, and get two lists: <strong>Ask the client</strong> (vague points, each with a clarifying question) and <strong>Ready to do</strong> (clear tasks to tick off). There is no server and no AI service inside the app.</p>
+    <p style="margin-bottom:0">It has three main pieces:</p>
+    <ul style="margin-bottom:0">
+      <li><code>js/phrases.js</code>: the hand-made library of vague phrases, question templates, the copy message wording and the two samples.</li>
+      <li><code>js/decoder.js</code>: the logic. It turns raw text into items. It has no page code, so the tests in <code>tests/decoder.test.js</code> load it directly with Node.</li>
+      <li><code>js/app.js</code>: the page. It reads the text box, calls the decoder, draws the lists and handles clicks.</li>
+    </ul>
+  </div>
+
+  <h2>One action, followed through the code</h2>
+  <p>The action: you press <strong>Decode</strong> on "Can you make it pop, it looks too plain right now." and see it in Ask the client with "make it pop" highlighted and a question under it.</p>
+  <div class="card scroll">
+    <svg class="diagram" viewBox="0 0 800 210" role="img" aria-labelledby="dg-title dg-desc">
+      <title id="dg-title">How Decode works</title>
+      <desc id="dg-desc">The Decode button in index.html calls runDecode in app.js, which calls decode in decoder.js. decode uses the phrase library in phrases.js and returns items. render in app.js draws them as the two lists on the page.</desc>
+      <defs><marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z"/></marker></defs>
+      <rect class="box" x="10" y="20" width="160" height="70" rx="12"/>
+      <text x="90" y="50" text-anchor="middle">Decode button</text>
+      <text class="small" x="90" y="70" text-anchor="middle">index.html #decode</text>
+      <rect class="box" x="220" y="20" width="160" height="70" rx="12"/>
+      <text x="300" y="50" text-anchor="middle">runDecode()</text>
+      <text class="small" x="300" y="70" text-anchor="middle">js/app.js</text>
+      <rect class="box" x="430" y="20" width="160" height="70" rx="12"/>
+      <text x="510" y="50" text-anchor="middle">decode()</text>
+      <text class="small" x="510" y="70" text-anchor="middle">js/decoder.js</text>
+      <rect class="box" x="430" y="130" width="160" height="66" rx="12"/>
+      <text x="510" y="158" text-anchor="middle">KINDS, templates</text>
+      <text class="small" x="510" y="178" text-anchor="middle">js/phrases.js</text>
+      <rect class="box" x="630" y="20" width="160" height="70" rx="12"/>
+      <rect class="hot" x="660" y="38" width="100" height="20" rx="6"/>
+      <text x="710" y="53" text-anchor="middle">two lists</text>
+      <text class="small" x="710" y="74" text-anchor="middle">render() in js/app.js</text>
+      <path class="arrow" d="M170 55H216"/>
+      <path class="arrow" d="M380 55H426"/>
+      <path class="arrow" d="M590 55H626"/>
+      <path class="arrow" d="M510 128V94"/>
+      <text class="small" x="398" y="44">text</text>
+      <text class="small" x="598" y="44">items</text>
+      <text class="small" x="518" y="114">phrases</text>
+    </svg>
+  </div>
+
+  <p class="where">Reference route: three stops, in the order the code runs. Search for the anchor text in your editor to jump there.</p>
+  <ol class="route">
+    <li class="card">
+      <strong>The click: <code>js/app.js</code>, search for <code>function runDecode</code></strong>
+      <p>The Decode button is wired to <code>runDecode</code>. It passes the text box value to the decoder, keeps the result in <code>state.items</code>, then calls <code>render</code>.</p>
+      <details><summary>Show the code</summary>
+<pre><code>function runDecode() {
+  state.items = Decoder.decode(feedback.value);
+  render();
+  ...
+}</code></pre></details>
+    </li>
+    <li class="card">
+      <strong>The decision: <code>js/decoder.js</code>, search for <code>function decode</code> and <code>function findVague</code></strong>
+      <p><code>decode</code> splits the text into points with <code>splitPoints</code>. For each point, <code>findVague</code> checks it against every phrase group built from <code>KINDS</code> in <code>js/phrases.js</code>. If anything matches, the point becomes an "ask" item and <code>buildQuestion</code> fills the matching template with the client's own words, in English and in Hinglish. Otherwise it is a "ready" item with a tag from <code>tagTask</code>.</p>
+      <details><summary>Show the code</summary>
+<pre><code>var vague = findVague(text);
+var lang = detectLanguage(text);
+var questions = vague.top ? { en: buildQuestion(vague.top, &quot;en&quot;), hi: buildQuestion(vague.top, &quot;hi&quot;) } : null;
+...
+kind: vague.top ? &quot;ask&quot; : &quot;ready&quot;,</code></pre></details>
+    </li>
+    <li class="card">
+      <strong>The result: <code>js/app.js</code>, search for <code>function render</code> and <code>function renderAskItem</code></strong>
+      <p><code>render</code> splits the items into the two lists, writes the summary chips (to ask, ready, clarity score) and the progress line. <code>renderAskItem</code> draws the kind label, the client's text with the matched words wrapped in highlight marks (built by <code>highlighted</code>, never with raw HTML), the question and the "Mark as clear" button.</p>
+    </li>
+  </ol>
+
+  <h2>To change this, start here</h2>
+  <ul class="pointers">
+    <li><strong>Add a vague phrase</strong> (for example a new Hinglish word): add it to the right group inside <code>KINDS</code> in <code>js/phrases.js</code>, then add a line to a test in <code>tests/decoder.test.js</code> and run <code>node --test</code>.</li>
+    <li><strong>Change a question's wording:</strong> edit the <code>en</code> or <code>hi</code> template of that group in <code>KINDS</code>. <code>{phrase}</code> is replaced with the client's words.</li>
+    <li><strong>Change "big but subtle" style detection:</strong> the <code>loud</code> and <code>quiet</code> word lists in <code>CONTRADICTION</code> in <code>js/phrases.js</code>.</li>
+    <li><strong>Change the copied message greeting or thanks:</strong> <code>MESSAGE</code> in <code>js/phrases.js</code>; the message itself is assembled by <code>buildMessage</code> in <code>js/decoder.js</code>.</li>
+    <li><strong>Change the samples:</strong> <code>SAMPLES</code> in <code>js/phrases.js</code>. Some tests count the sample points, so update them too.</li>
+    <li><strong>Change colors or fonts:</strong> the variables at the top of <code>styles.css</code>.</li>
+    <li><strong>Change what a click does</strong> (tick, move, copy, new feedback): <code>handleListAction</code>, <code>copyQuestions</code> and <code>startOver</code> in <code>js/app.js</code>.</li>
+  </ul>
+
+  <h2>A practice to reuse</h2>
+  <div class="card">
+    <p style="margin-top:0"><strong>Test with real messages, then turn every surprise into a test.</strong> During the build, a realistic line, <code>Menu me "Contact" add karo</code>, was read as English because it had only one Hinglish marker word. The fix (a short line with one marker counts as Hinglish) is recorded under Revisions in <code>devpost/checklist.md</code>, and the test "Hinglish points get Hinglish questions and English points get English questions" in <code>tests/decoder.test.js</code> now guards it. The same happened with false alarms: "pop-up" and "plain white background" are now in a test that checks they are <em>not</em> flagged.</p>
+    <p style="margin-bottom:0">On your next project: before calling a feature done, try it with a few inputs copied from real life, and write each one that breaks as a small test. The fix stays fixed, and the test explains why the rule exists.</p>
+  </div>
+
+  <h2>Run it again</h2>
+  <div class="card">
+    <ul style="margin:0">
+      <li>Open <code>index.html</code> in any modern browser. Nothing to install.</li>
+      <li>Or serve the folder: <code>npx serve .</code> and open the printed address.</li>
+      <li>Run the checks: <code>node --test</code> (Node.js 20 or newer).</li>
+    </ul>
+  </div>
+
+  <footer>Snapshot of the code at commit <code>4928aab</code>. The code can change after this, so search for the function names if a path or line has moved.</footer>
+</main>
+</body>
+</html>

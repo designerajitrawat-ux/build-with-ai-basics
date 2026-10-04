@@ -74,10 +74,12 @@ Build mode: fast (the learner asked to review the finished output rather than ea
 
 ## Code Tour and App Map
 
-- [ ] Learning wrap-up and `devpost/app-map.html` complete
+- [x] Learning wrap-up and `devpost/app-map.html` complete
+  Activity: a brief evidence-based recap, not hands-on practice, because the learner asked to review the finished output rather than each step. Evidence used: the "Menu me \"Contact\" add karo" language bug from Slice 2 (Revisions) and the tests that now guard it and the "pop-up" false alarm. Reference route in the map (not toured interactively): `runDecode` in `js/app.js`, `decode` and `findVague` in `js/decoder.js`, `render` and `renderAskItem` in `js/app.js`. Edit: not applicable. Reflection question: offered.
 
 ## Revisions
 - Slice 2: a line with one Hinglish marker word is now treated as Hinglish when it has up to six words (was four), because "Menu me \"Contact\" add karo" was read as English. Internal change; behavior matches `prd.md > Clarifying Questions`.
 - Slice 2: removed "adjust", "set karo", "royal" and plain "halka" from the phrase library after checking that they also appear in clear, specific requests (for example "set karo font size 16", "royal blue").
 - Slice 5: muted text color changed from `#6B655C` to `#625D55`, and placeholder and finished-task text to `#766F65`, so every text color reaches a contrast ratio of at least 4.5:1. `spec.md > Look and Feel` updated.
 - Slice 5: small polish within the agreed boundary: a three-step "how it works" line under the promise, a Ctrl + Enter shortcut for Decode, and a `docs/screenshot.png` for the README. `spec.md > File Structure` updated.
+- Learning wrap-up: added a check to `tests/decoder.test.js` that "Menu me \"Contact\" add karo" is read as Hinglish, so the Slice 2 fix is guarded by a test, as the app map describes.
