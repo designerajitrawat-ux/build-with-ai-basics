@@ -24,6 +24,7 @@ Some of that is a clear task. Some of it ("thoda", "premium", "kuch alag", "make
 ## Try it
 
 - **Live:** https://designerajitrawat-ux.github.io/build-with-ai-basics/ (works on a phone too).
+- **Demo video (2:40):** https://youtu.be/qGRGaGpegdQ
 - **No install:** download or clone this repository and open `index.html` in any modern browser.
 - Or serve the folder: `npx serve .` and open the printed address.
 - Press **English sample**, **Hinglish sample** or **Screenshot sample**, then **Decode**. The screenshot sample needs the page served from an address (the live link or `npx serve .`), because browsers block reading files from a page opened straight from disk.
