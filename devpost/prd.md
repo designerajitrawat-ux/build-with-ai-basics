@@ -161,6 +161,8 @@ Everything under **Features and Behavior** and **States and Boundaries**, on a s
 - **Custom phrases added by the user:** needs an editor and saving.
 
 ## Possible Later Enhancements
+- **Feedback from real users, to build together in one update** (collected after submission):
+  - "Make this but better" briefs, often with an AI-made reference ("This is what AI made, can you make this but better?", "isse better bana do"). They are vague but land in Ready to do today; they should go to Ask the client with a question like "Better how: the layout, the colors, the wording, or the overall feel? And what should stay from the AI version?" (from a designer's comment on the LinkedIn post).
 - Devanagari (Hindi script) support for feedback written in Hindi letters.
 - Voice-note feedback turned into text before decoding.
 - Reading screenshots fully offline, and screenshots from other chat apps tuned like WhatsApp.
